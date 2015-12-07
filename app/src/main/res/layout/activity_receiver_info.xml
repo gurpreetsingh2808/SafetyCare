@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.gurpreetsingh.project.ReceiverInfo">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarReceiverInfo"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:background="@color/primaryColor"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="Emergency Contacts"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/imageViewAddContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:adjustViewBounds="true"
+                android:paddingBottom="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_person_add_white_24dp"
+                android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/imageViewDeleteContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:adjustViewBounds="true"
+                android:paddingBottom="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_delete_white_24dp"
+                android:textSize="25sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imageViewReplaceContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/imageViewDeleteContact"
+                android:adjustViewBounds="true"
+                android:paddingBottom="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_mode_edit_white_24dp"
+                android:textSize="25sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/textViewInstruction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tap on the icon above to add contacts"
+            android:textColor="@color/item_pressed"
+            android:visibility="gone"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/listViewContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <com.github.clans.fab.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fab3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_play_arrow_white_24dp"
+            fab:fab_colorNormal="@color/accentColor"
+            fab:fab_colorPressed="@color/accentColor" />
+
+    </RelativeLayout>
+</LinearLayout>

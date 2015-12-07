@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:checked="true"
+            android:icon="@drawable/ic_my_location_black_24dp"
+            android:title="Ask for help"/>
+        <!--
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_directions_run_black_24dp"
+            android:title="Route Planner"/>
+            -->
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_mic_black_24dp"
+            android:title="Voice Commands"/>
+        <item
+            android:id="@+id/navigation_item_3"
+            android:icon="@drawable/ic_call_black_24dp"
+            android:title="Helpline Numbers"/>
+        <item
+            android:id="@+id/navigation_item_4"
+            android:icon="@drawable/ic_navigation_black_24dp"
+            android:title="Navigation"/>
+        <item
+            android:id="@+id/navigation_item_5"
+            android:icon="@drawable/ic_camera_black_24dp"
+            android:title="Share Picture"/>
+        <item
+            android:id="@+id/navigation_item_6"
+            android:icon="@drawable/ic_near_me_black_24dp"
+            android:title="Nearby Help"/>
+        <!--
+        <item
+            android:id="@+id/navigation_item_7"
+            android:icon="@drawable/ic_setting_light"
+            android:title="Nearby Places"/>
+            -->
+        <item
+            android:id="@+id/navigation_item_8"
+            android:icon="@drawable/ic_setting_light"
+            android:title="Settings"/>
+        <!--
+        <item
+            android:id="@+id/navigation_item_9"
+            android:icon="@drawable/ic_mic_black_24dp"
+            android:title="My Profile"/>
+            -->
+    </group>
+</menu>

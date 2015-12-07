@@ -1,0 +1,164 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    tools:context="com.example.gurpreetsingh.project.AppSettings">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarSettings"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:background="@color/primaryColor"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/textViewShake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="Shake To Alert"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switchShake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+<!--
+        <TextView
+            android:id="@+id/textViewFake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/switchAuto"
+            android:layout_marginTop="82dp"
+            android:text="Fake Power Off"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switchFake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textViewFake"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/textViewAuto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textViewQuick"
+            android:layout_marginTop="82dp"
+            android:text="Auto Answer Calls"
+            android:textSize="20sp" />
+
+        <Switch
+            android:id="@+id/switchAuto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/textViewAuto" />
+-->
+        <TextView
+            android:id="@+id/textViewQuick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/textViewShakeDetail"
+            android:text="Quick Activation"
+            android:textSize="20sp"/>
+
+        <Switch
+            android:id="@+id/switchQuick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textViewQuick"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true" />
+
+        <com.github.clans.fab.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fab4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_play_arrow_white_24dp"
+            fab:fab_colorNormal="@color/accentColor"
+            fab:fab_colorPressed="@color/accentColor" />
+
+
+        <TextView
+            android:id="@+id/textViewShakeDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textViewShake"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/shake_to_alert"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey" />
+<!--
+        <TextView
+            android:id="@+id/textViewFakeDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textViewFake"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/fake_power_off"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey" />
+
+        <TextView
+            android:id="@+id/textViewAutoDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/switchAuto"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/auto_answer"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey" />
+-->
+        <TextView
+            android:id="@+id/textViewQuickDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textViewQuick"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/quick_start"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/grey" />
+
+    </RelativeLayout>
+</LinearLayout>

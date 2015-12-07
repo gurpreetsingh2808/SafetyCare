@@ -1,0 +1,112 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.gurpreetsingh.project.VoiceCommandsFragment">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutVoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/predefinedCommandCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primaryColor">
+
+                <TextView
+                    android:id="@+id/tvCommandHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="Command"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvActionHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:gravity="end"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="Action"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listViewShowCommand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/spokenCommandCardView"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp"
+            android:layout_marginTop="10dp">
+            <!-- android:layout_alignTop="@+id/fabCommand" -->
+
+            <TextView
+                android:id="@+id/tvSpokenCommand"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/fabCommand"
+                android:layout_alignRight="@+id/fabCommand"
+                android:text="Tap on the mic"
+                android:textColor="@color/grey"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:textSize="18sp" />
+
+
+            <ImageView
+                android:id="@+id/imageButtonCommand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_mic_white_24dp"
+                android:layout_margin="10dp"
+                android:tint="@color/accentColor"
+                android:layout_below="@+id/predefinedCommandCardView"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+        </android.support.v7.widget.CardView>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
