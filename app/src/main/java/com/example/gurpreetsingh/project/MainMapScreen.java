@@ -181,6 +181,7 @@ public class MainMapScreen extends AppCompatActivity {
             setSupportActionBar(mToolbar);
             //getSupportActionBar().setTitle("Ask for help");
         }
+        if(title != "Navigation")
             getSupportActionBar().setTitle(title);
     }
 
@@ -239,7 +240,7 @@ public class MainMapScreen extends AppCompatActivity {
     void loadData() {
 
         //  getting previously stored data
-        SharedPreferences sharedPreferences = getSharedPreferences("VerificationData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("Name", DEFAULT);
         email = sharedPreferences.getString("Email", DEFAULT);
 
@@ -279,7 +280,8 @@ public class MainMapScreen extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("TOOLBAR_TITLE", title);
+        if(title != "Navigation")
+            outState.putString("TOOLBAR_TITLE", title);
         getSupportFragmentManager().putFragment(outState, "MY_FRAGMENT", selectedFragment);
         Log.d("menu", "onSaveInstanceState " + title);
     }
