@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -22,9 +25,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -87,6 +93,7 @@ public class MapFragment extends Fragment {
         //    mMarker.remove();
         //}
         setUpMap();
+
         /*
         getCurrentLocation();
         if(!canGetLocation){
@@ -113,6 +120,8 @@ public class MapFragment extends Fragment {
         //googleMap=null;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -120,10 +129,18 @@ public class MapFragment extends Fragment {
         //if(mMarker!=null) {
         //    mMarker.remove();
         //}
-        getCurrentLocation();
-        if(!canGetLocation){
-            showSettingsAlert();
-        }
+
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getCurrentLocation();
+                if(!canGetLocation){
+                    showSettingsAlert();
+                }
+            }
+        },700);
+
     }
 
     void setUpMap()  {
@@ -146,12 +163,17 @@ public class MapFragment extends Fragment {
 
     void getCurrentLocation()   {
 Log.d("test","getcurrentloc");
-        if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+        if ( ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
 
         try {
-            Log.d("test","try");
+            Log.d("test", "try");
+
+            //if(mMarker!=null) {
+            //    mMarker.remove();
+            //}
 
             locationManager = (LocationManager) MyApplication.getAppContext().getSystemService(MyApplication.LOCATION_SERVICE);
 
@@ -207,9 +229,42 @@ Log.d("test","getcurrentloc");
                 }
                 Log.d("test","try done");
                 address=GetAddress(latitude, longitude);
-                Log.d("test",""+address);
+                Log.d("test", "" + address);
+
+                googleMap.clear();
                 mMarker=googleMap.addMarker(new MarkerOptions().position(
                         new LatLng(latitude, longitude)).title("" + address));//
+
+                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                    @Override
+                    public View getInfoWindow(Marker arg0) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+
+                        LinearLayout info = new LinearLayout(getContext());
+                        info.setOrientation(LinearLayout.VERTICAL);
+
+                        TextView title = new TextView(getContext());
+                        title.setTextColor(Color.BLACK);
+                        title.setGravity(Gravity.CENTER);
+                        //title.setTypeface(null, Typeface.BOLD);
+                        title.setText(marker.getTitle());
+
+                        //TextView snippet = new TextView(getContext());
+                        //snippet.setTextColor(Color.GRAY);
+                        //snippet.setText(marker.getSnippet());
+
+                        info.addView(title);
+                        //info.addView(snippet);
+
+                        return info;
+                    }
+                });
+
                 mMarker.showInfoWindow();
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 20));
             }
@@ -249,7 +304,7 @@ Log.d("test","getcurrentloc");
             if(addresses != null) {
                 int countSpaces=0;
                 Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("Address: ");
+                StringBuilder strReturnedAddress = new StringBuilder();
                 for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
                     if(returnedAddress.getAddressLine(i)==" ")
                         countSpaces++;
