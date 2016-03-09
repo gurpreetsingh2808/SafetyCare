@@ -295,7 +295,7 @@ public class ReceiverInfo extends AppCompatActivity {
         Toast.makeText(ReceiverInfo.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
     }
 
-    //  custom adapter for spinner(country codes)
+    //  custom adapter for listview(country codes)
     class MyAdapter extends ArrayAdapter<String> {
 
         public MyAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {

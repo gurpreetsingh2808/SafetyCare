@@ -100,7 +100,7 @@ public class VoiceCommandsFragment extends Fragment {
                 //startActivity(i);
                 break;
             case "message":
-                Toast.makeText(getActivity(),"sending message "+action,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"working "+action,Toast.LENGTH_SHORT).show();
                 Log.d("message", "inside switch");
                 for(int i=0; i<ReceiverInfo.contactCounter; i++)  {
                     contactNumber = sharedPreferences.getString("EmergencyContactNumber["+i+"]","121");

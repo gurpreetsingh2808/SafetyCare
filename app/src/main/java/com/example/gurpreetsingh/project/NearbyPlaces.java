@@ -60,16 +60,6 @@ public class NearbyPlaces extends AppCompatActivity {
             // The user has selected a place. Extract the name and address.
             final Place place = PlacePicker.getPlace(data, this);
 
-            List<Integer> police= place.getPlaceTypes();
-            //new ArrayList<>();
-            //police.add("");
-            if (police.contains(76)) {
-                Log.d("test", "police place found");
-                Toast.makeText(this, "police place found", Toast.LENGTH_SHORT).show();
-            };
-
-
-
             final CharSequence name = place.getName();
             final CharSequence address = place.getAddress();
             String attributions = PlacePicker.getAttributions(data);

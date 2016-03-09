@@ -27,7 +27,7 @@ public class SettingsContentObserver extends ContentObserver {
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         //previousVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         previousVolume = audio.getStreamVolume(AudioManager.STREAM_RING);
-        Log.d("test", "setting content observer" + previousVolume);
+        Log.d("VolumeService", "setting content observer" + previousVolume);
 
     }
 
@@ -40,7 +40,7 @@ public class SettingsContentObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
 
-        Log.d("test", "on change");
+        Log.d("VolumeService", "on change");
 
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         //int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -54,7 +54,7 @@ public class SettingsContentObserver extends ContentObserver {
 
         if(delta>2 || delta<-2)
         {
-            Log.d("test", "Decreased");
+            Log.d("VolumeService", "Decreased");
             Toast.makeText(context, "Vol down pressed", Toast.LENGTH_SHORT).show();
             previousVolume=currentVolume;
 

@@ -37,7 +37,7 @@ public class ShakeService extends Service {
             public void onShake() {
                 Toast.makeText(getApplicationContext(), "Shake!", Toast.LENGTH_SHORT).show();
                 PerformAction.message("121", "default text");
-                for(int i=0; i<ReceiverInfo.contactCounter; i++)  {
+                for(int i=0; i<ReceiverInfo.contactCounter ; i++)  {
                     String contactNumber = sharedPreferences.getString("EmergencyContactNumber["+i+"]","121");
                     PerformAction.message(contactNumber, "I am  in trouble. Do contact me fast.");
                     Log.d("message", "message sent");

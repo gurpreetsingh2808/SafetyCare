@@ -12,6 +12,7 @@ public class VolumeService extends Service {
     MediaPlayer mediaPlayer;
 
     public VolumeService() {
+        Log.d("VolumeService", "constructor started");
         //Toast.makeText(this, "constructor service", Toast.LENGTH_SHORT).show();
     }
 
@@ -23,7 +24,7 @@ public class VolumeService extends Service {
 
     @Override
     public void onCreate() {
-        Log.d("test", "oncreate service started");
+        Log.d("VolumeService", "oncreate service started");
         //mediaPlayer= MediaPlayer.create(getApplicationContext(), R.raw.point1sec);
         //mediaPlayer.start();
 
@@ -34,14 +35,14 @@ public class VolumeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("test", "onstart of service started");
+        Log.d("VolumeService", "onstart of service started");
 
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        Log.d("test", "destroy service");
+        Log.d("VolumeService", "destroy service");
         //mediaPlayer.stop();
 
         getApplicationContext().getContentResolver().unregisterContentObserver(mSettingsContentObserver);

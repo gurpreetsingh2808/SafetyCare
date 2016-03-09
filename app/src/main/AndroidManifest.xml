@@ -126,11 +126,11 @@
         </activity>
 
         <service
-            android:name=".MyService"
+            android:name=".VolumeService"
             android:enabled="true"
             android:exported="true" >
         </service>
-
+<!--
         <receiver
             android:name=".ButtonsReceiver"
             android:enabled="true"
@@ -139,11 +139,13 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-
+        -->
+<!--
         <service
             android:name=".AutoAnswerIntentService"
             android:exported="false" >
         </service>
+        -->
         <service
             android:name=".ShakeService"
             android:enabled="true"

@@ -40,6 +40,9 @@ import org.json.JSONObject;
  */
 public class NearbyHelpFragment extends Fragment {
 
+
+    RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
+
     // flag for GPS status
     boolean isGPSEnabled = false;
 
@@ -58,9 +61,9 @@ public class NearbyHelpFragment extends Fragment {
 
     public static Double latitude,longitude;
     GoogleMap googleMap;
-    SupportMapFragment supportMapFragment;
     Marker mMarker;
-    String address;
+    private LocationListener mLocationListener = MapFragment.mLocationListener;
+
 
     public NearbyHelpFragment() {
         // Required empty public constructor
@@ -82,9 +85,11 @@ public class NearbyHelpFragment extends Fragment {
         Log.d("menu", "on resume");
         setUpMap();
 
-        latitude = MapFragment.latitude;
-        longitude = MapFragment.longitude;
-        Log.d("menu", "on resume nearby " + latitude + " " + longitude);
+        if(latitude==null && longitude==null) {
+            latitude = MapFragment.latitude;
+            longitude = MapFragment.longitude;
+            Log.d("menu", "on resume nearby " + latitude + " " + longitude);
+        }
 
         // if location was not retrieved successfully in mapfragment due to disabled location
         if(latitude==null && longitude==null)  {
@@ -100,13 +105,10 @@ public class NearbyHelpFragment extends Fragment {
             mMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             mMarker.showInfoWindow();
 
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
         }
 
-              //  apply parsed data
-        //String url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-        //sendJsonRequest("Police Station", url);
     }
 
     void setUpMap()  {
@@ -121,9 +123,8 @@ public class NearbyHelpFragment extends Fragment {
             Log.d("menu", "map exception "+e);
 
         }
-        //googleMap.setMyLocationEnabled(true);
-        //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
+
 
     void getCurrentLocation()   {
 
@@ -187,7 +188,7 @@ public class NearbyHelpFragment extends Fragment {
                 //address=GetAddress(latitude, longitude);
                 //Log.d("test",""+address);
                 mMarker=googleMap.addMarker(new MarkerOptions().position(
-                        new LatLng(latitude, longitude)).title("" + address));//
+                        new LatLng(latitude, longitude)).title("You are "));//
                 mMarker.showInfoWindow();
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
             }
@@ -198,34 +199,8 @@ public class NearbyHelpFragment extends Fragment {
         }
     }
 
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            //your code here
-            Toast.makeText(getActivity(), "Location changed", Toast.LENGTH_SHORT).show();
-            getCurrentLocation();
-        }
 
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Toast.makeText(getActivity(), "Status changed to "+status, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Toast.makeText(getActivity(), "Provider is now enabled", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Toast.makeText(getActivity(), "Provider is now disabled", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-
-RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
-
-    void sendJsonRequest(final String choice, String url)  {
+    void sendJsonRequest(String url)  {
 
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,
                 url,
@@ -234,7 +209,7 @@ RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
                     public void onResponse(JSONObject response) {
                         //parsing request
                         Log.d("menu", "parsing req");
-                        parseJSONResponse(response, choice);
+                        parseJSONResponse(response);
                         Log.d("menu", "req parsed");
                     }
                 },
@@ -249,7 +224,7 @@ RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
         Log.d("menu", "req added to queue");
     }
 
-    private void parseJSONResponse(JSONObject response, String choice)   {
+    private void parseJSONResponse(JSONObject response)   {
 
         Log.d("menu", "parse req");
         if(response==null || response.length()==0){
@@ -266,111 +241,19 @@ RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
 
             Log.d("menu", "for loop");
             for(int i=0; i<len; i++){
-                if(choice.equals("Police Station")) {
-                    Log.d("menu", "choice is police");
-
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-
-
-                    //data.append(lat + " " +lng + "\n");
-                    //Log.d("menu", "data appended");
-                }
-                else if(choice.equals("Train Station")) {
-
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyTrainStation = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyTrainStation.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Subway Station")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbySubwayStation = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbySubwayStation.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Bus Station")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyBusStation = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyBusStation.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Gas Station")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyGasStation = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyGasStation.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Hospital")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyHospital = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyHospital.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Doctor")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyDoctor = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyDoctor.getString("name");
-                    //data.append(name + "\n");
-                }
-                else if(choice.equals("Taxi Stand")) {
-                    JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                    JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
-                    //Log.d("menu", "objects ok");
-                    name[i] = nearbyObject.getString("name");
-                    lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
-                    lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                    //JSONObject nearbyTaxiStand = jsonArrayResult.getJSONObject(i);
-                    //String name = nearbyTaxiStand.getString("name");
-                    data.append(name + "\n");
-                }
-                /*JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
+                JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
                 JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
                 //Log.d("menu", "objects ok");
                 name[i] = nearbyObject.getString("name");
                 lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
                 lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
-                */
+
             }
             // displaying result in map after reading complete response
             addOnMap(len, name, lat, lng);
 
             Log.d("menu", "toast");
-            //Toast.makeText(getActivity(), data.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Data Updated", Toast.LENGTH_SHORT).show();
             Log.d("menu", data.toString());
 
         }
@@ -382,10 +265,18 @@ RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
 
 
 void addOnMap(int len, String[] name, Double[] lat, Double[] lng)  {
-    for (int i=0; i<len; i++)  {
+
+    googleMap.clear();
+    mMarker = googleMap.addMarker(new MarkerOptions().position(
+            new LatLng(latitude, longitude)).title("You are here"));
+    mMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+    mMarker.showInfoWindow();
+    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
+
+    for (int i=0; i<len; i++) {
         try {
             googleMap.addMarker(new MarkerOptions().position(new LatLng(lat[i], lng[i])).title(""+name[i]));
-            mMarker.showInfoWindow();
+            //mMarker.showInfoWindow();
         }
         catch (Exception e)  {
             Log.d("menu","exception "+e);

@@ -178,7 +178,7 @@ public class UserInformation extends AppCompatActivity {
                 Toast.makeText(UserInformation.this,"Invalid email ID",Toast.LENGTH_SHORT).show();
             }
 
-            else if(password.contains(" ") || confirmPassword.contains(" ") || (password.length() < 8) || (confirmPassword.length() < 8) )  {
+            else if(password.contains(" ") || (password.length() < 8) )  {
                 Toast.makeText(UserInformation.this, "Password should be at least 8 characters long and without spaces ", Toast.LENGTH_LONG).show();
             }
             else if(!(password.equals(confirmPassword)))  {
@@ -218,7 +218,7 @@ public class UserInformation extends AppCompatActivity {
                         bitmapImage = MediaStore.Images.Media.getBitmap(UserInformation.this.getContentResolver(), data.getData());
                         contactImageView.setImageBitmap(bitmapImage);
                     } catch (IOException e) {
-                        Log.e("user","exception "+e);
+                        Log.e("user","image not selected/io exception "+e);
                     }
                 }
             }
@@ -230,13 +230,19 @@ public class UserInformation extends AppCompatActivity {
     private void saveToInternalSorage()  {
         BufferedOutputStream out = null;
         String path=Environment.getExternalStorageDirectory()+"/Android/data/"+ getPackageName();
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
         try {
-            //File temp = new File(Environment.getExternalStorageDirectory(), "out.png");
+            File temp2 = new File(Environment.getExternalStorageDirectory(), "profile_pic.png");
             File temp = new File(path, "profile_pic.png");
             out = new BufferedOutputStream(new FileOutputStream(temp));
+            //            out = new BufferedOutputStream(new FileOutputStream(temp2));
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (FileNotFoundException e) {
-            Log.d("user","exception "+e);
+            Log.d("user","file not found exception "+e);
         } finally {
             if (out != null) try {
                 out.close();

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imageLayout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.gurpreetsingh.project.SharePicture">
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
-        android:layout_above="@+id/fabSharePicture" />
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/fabCaptureImage"
+        android:layout_margin="40dp" />
 
+<!--
     <com.github.clans.fab.FloatingActionButton
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fabSharePicture"
@@ -25,6 +27,32 @@
         android:layout_centerHorizontal="true"
         fab:fab_colorNormal="@color/accentColor"
         fab:fab_colorPressed="@color/accentColor"/>
+-->
+
+
+    <android.support.design.widget.FloatingActionButton
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fabCaptureImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        fab:fab_colorNormal="@color/accentColor"
+        fab:fab_colorPressed="@color/red"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabShareImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:src="@drawable/ic_send_white_24_2dp"
+        fab:fab_colorNormal="@color/accentColor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        fab:fab_colorPressed="@color/red" />
 
 
 </RelativeLayout>

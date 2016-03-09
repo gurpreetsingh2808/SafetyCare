@@ -56,10 +56,11 @@ public class AppSettingsFragment extends Fragment {
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Data", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
+                Log.d("Volume", "checked");
                 intentVolumeService = new Intent(getActivity(), VolumeService.class);
                 if (switchQuick.isChecked()) {
                     editor.putString("QuickStartState", "checked");
-                    Log.d("AppSettings", "checked");
+                    Log.d("Volume", "checked");
                     getActivity().startService(intentVolumeService);
                 } else {
                     editor.putString("QuickStartState", "unchecked");

@@ -59,12 +59,18 @@ public class MainMapScreen extends AppCompatActivity {
     ImageView pic;
     TextView tvName, tvEmail;
     String email, name, url, choice=null;
-    RequestQueue mRequestQueue;
+    private static MainMapScreen mainMapScreenInstance;
+
+    public static AppCompatActivity getActivity(){
+          return mainMapScreenInstance;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map_screen);
+
+        mainMapScreenInstance=this;
 
         // unlock screen if it is locked
         Window window = getWindow();
@@ -91,25 +97,33 @@ public class MainMapScreen extends AppCompatActivity {
         }
 
         mNavigationView = (NavigationView) findViewById(R.id.myNavBar);
+
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
+                //Closing drawer on item click
+                //drawerLayout.closeDrawers();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+
                 mNavItemId = menuItem.getItemId();
+                // navigation opens new activity
+                //so we don't want navigation on tool bar
                 title = (String) menuItem.getTitle();
                 //toolbar5.setTitle(title);
-                if(mNavItemId != R.id.navigation_item_5){
+
+                // to avoid displaying navigation or camera in toolbar
+                if (title.equals("Navigation")) {
                     // update highlighted item in the navigation menu
+                    menuItem.setChecked(false);
+                } else {
                     menuItem.setChecked(true);
-                    setUpToolbar();
                 }
+                setUpToolbar();
 
                 // allow some time after closing the drawer before performing real navigation
                 // so the user can see what is happening
 
-                //Closing drawer on item click
-                //drawerLayout.closeDrawers();
-                mDrawerLayout.closeDrawer(GravityCompat.START);
 
                 /////    an event occurs and you want to perform a menu update, you must call
                 ////      invalidateOptionsMenu() to request that the system call onPrepareOptionsMenu()
@@ -132,7 +146,7 @@ public class MainMapScreen extends AppCompatActivity {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q"));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    showSnackbar(title + " pressed");
+                    //showSnackbar(title + " pressed");
                 } else if (mNavItemId == R.id.navigation_item_5) {
                     selectedFragment = new SharePicture();
                     setFragment();
@@ -148,32 +162,20 @@ public class MainMapScreen extends AppCompatActivity {
                     //setFragment();
 
                     showSnackbar(title + " pressed");
-                }*/
-                 else if (mNavItemId == R.id.navigation_item_8) {
+                }*/ else if (mNavItemId == R.id.navigation_item_8) {
                     selectedFragment = new AppSettingsFragment();
                     setFragment();
                     showSnackbar(title + " pressed");
                 }
+
+                //Closing drawer on item click
+                //////mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
-
         setUpNavDrawer();
     }
 
-    /*
-    public Bitmap getImageBitmap(String name){
-        try{
-            FileInputStream fis = getApplicationContext().openFileInput(name);
-            Bitmap b = BitmapFactory.decodeStream(fis);
-            fis.close();
-            return b;
-        }
-        catch(Exception e){
-        }
-        return null;
-    }
-    */
 
     public void setUpToolbar(){
         if(mToolbar==null) {
@@ -181,7 +183,9 @@ public class MainMapScreen extends AppCompatActivity {
             setSupportActionBar(mToolbar);
             //getSupportActionBar().setTitle("Ask for help");
         }
+        if(!(title.equals("Navigation"))){
             getSupportActionBar().setTitle(title);
+        }
     }
 
     public void setUpNavDrawer(){
@@ -239,7 +243,7 @@ public class MainMapScreen extends AppCompatActivity {
     void loadData() {
 
         //  getting previously stored data
-        SharedPreferences sharedPreferences = getSharedPreferences("VerificationData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE);
         name = sharedPreferences.getString("Name", DEFAULT);
         email = sharedPreferences.getString("Email", DEFAULT);
 
@@ -279,33 +283,11 @@ public class MainMapScreen extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("TOOLBAR_TITLE", title);
+        if(title != "Navigation")
+            outState.putString("TOOLBAR_TITLE", title);
         getSupportFragmentManager().putFragment(outState, "MY_FRAGMENT", selectedFragment);
         Log.d("menu", "onSaveInstanceState " + title);
     }
-
-/*
-    @Override
-    protected void onRestoreInstanceState(Bundle inState) {
-        super.onRestoreInstanceState(inState);
-        String toolbarTitle = inState.getString("TOOLBAR TITLE", "Ask for help");
-        //toolbar5.set
-        Log.d("save", "onRestoreInstanceState");
-
-        //Menu menu = mNavigationView.getMenu();
-        //menu.getItem(selectedPosition).setChecked(true);
-    }
-    */
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        Log.d("menu", "mainmap");
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main_map_screen, menu);
-        return true;
-    }
-    */
 
 
     @Override
@@ -341,13 +323,15 @@ public class MainMapScreen extends AppCompatActivity {
         Log.d("menu", "choice " + choice);
 
         //  object was needed to call its method
-        NearbyHelpFragment nearbyHelpFragment = new NearbyHelpFragment();
+        //////////////////////  new
+        ////////////////////// NearbyHelpFragment nearbyHelpFragment = new NearbyHelpFragment();
         //  new fragment is created but it was not set up
         //  therefore NPE in googlemap
         //  so fragment is set again
 
-        selectedFragment = nearbyHelpFragment;
-        setFragment();
+        ///////////////////////selectedFragment = nearbyHelpFragment;
+        ///////////////////////setFragment();
+        NearbyHelpFragment nearbyHelpFragment = (NearbyHelpFragment)selectedFragment;
 
         Log.d("menu", "fragments ok");
 
@@ -364,34 +348,33 @@ public class MainMapScreen extends AppCompatActivity {
 
         Log.d("menu", "lat lng ok");
 
-
-
-
         //////////////  FOR NEARBY FRAGMENT
         //noinspection SimplifiableIfStatement
         if (id == R.id.policeStaion) {
 
-            Log.d("menu","choice again"+choice);
+            Log.d("menu", "choice again" + choice);
 
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?location=" +lat+ "," +lng+ "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = "https://maps.googleapis.com/maps/api/place/search/json?location=" +lat+ ","
+                        +lng+ "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470" +
+                        "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
+
             Log.d("menu", "url : "+url);
             return true;
         }
         else if (id == R.id.hospital) {
             Log.d("menu", "hospital");
-            //mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             if(lat != null && lng != null)
                 url = "https://maps.googleapis.com/maps/api/place/search/json?location=" +lat+ "," +lng+ "&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             else
                 url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.doctor) {
@@ -403,7 +386,7 @@ public class MainMapScreen extends AppCompatActivity {
             else
                 url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.trainStaion) {
@@ -415,7 +398,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.subwayStaion) {
@@ -427,7 +410,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.busStaion) {
@@ -438,7 +421,7 @@ public class MainMapScreen extends AppCompatActivity {
                 url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=bus_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.gasStaion) {
@@ -450,7 +433,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.taxi_stand) {
@@ -462,7 +445,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(choice, url);
+            nearbyHelpFragment.sendJsonRequest(url);
             Log.d("menu", "sending request");
         }
         ///////////////     NEARBY FRAGMENT END
