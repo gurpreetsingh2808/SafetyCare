@@ -237,4 +237,5 @@
             android:layout_marginRight="16dp"
             fab:fab_colorNormal="@color/accentColor"
             fab:fab_colorPressed="@color/accentColor"/>
+
 </RelativeLayout>

@@ -36,9 +36,14 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
         -->
+        <!--
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDw2r-_IyayY4iWQVce3O5SdV3EV2CSPjY" />
+        -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCWcDiyFJ1GDGxYj36rv_K-AJ_dThqlo6c" />
         <!--
         for places api
         <meta-data
@@ -96,15 +101,6 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Map"
-            android:label="@string/title_activity_map" >
-        </activity>
-        <activity
-            android:name=".AppSettingsFragment"
-            android:label="App Settings"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".MainMapScreen"
             android:label="@string/title_activity_main_map_screen" >
 
@@ -116,13 +112,6 @@
             </intent-filter>
             -->
 
-        </activity>
-        <activity
-            android:name=".VoiceCommands"
-            android:label="@string/title_activity_voice_commands"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity android:name=".SettingsFragment" >
         </activity>
 
         <service
@@ -152,8 +141,7 @@
             android:exported="true" >
         </service>
 
-        <activity android:name=".SharePicture" >
-        </activity>
+
         <activity android:name=".NearbyPlaces" >
         </activity>
     </application>

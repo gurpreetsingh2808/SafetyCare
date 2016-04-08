@@ -12,8 +12,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -44,6 +48,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -95,7 +100,7 @@ public class MapFragment extends Fragment {
 
 
         progressBar = new ProgressDialog(getContext());
-        progressBar.setCancelable(true);
+        //progressBar.setCancelable(true);
         progressBar.setMessage("Fetching current location ...");
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //progressBar.setProgress(0);
@@ -138,30 +143,21 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("test", "onresume");
-        displayLocationUI();
+        final Handler mHandler = new Handler();
 
-    }
-
-    void displayLocationUI() {
-        //making share fab invisible and helpfab visible
-        fabShare.setVisibility(View.GONE);
-        fabShare.animate().translationYBy(250);
-        //fabHelp.setVisibility(View.VISIBLE);
+        //if (!canGetLocation) {
+        //    progressBar.dismiss();
+        //    showSettingsAlert();
+        //}
         progressBar.show();
-
-        Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getCurrentLocation();
-                if (!canGetLocation) {
-                    progressBar.dismiss();
-                    showSettingsAlert();
-                }
+                displayLocationUI();
             }
-        }, 800);
-    }
+        }, 1500);
 
+    }
 
     void setUpMap() {
         try {
@@ -178,6 +174,16 @@ public class MapFragment extends Fragment {
         }
         //googleMap.setMyLocationEnabled(true);
         //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+    }
+
+
+    void displayLocationUI() {
+        //making share fab invisible and helpfab visible
+        fabShare.setVisibility(View.GONE);
+        fabShare.animate().translationYBy(250);
+        //fabHelp.setVisibility(View.VISIBLE);
+        getCurrentLocation();
+
     }
 
      void getCurrentLocation() {
@@ -197,132 +203,151 @@ public class MapFragment extends Fragment {
 
             // getting network status
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
+/*
+            if(!isNetworkEnabled) {
                 // no network provider is enabled
                 //Toast.makeText(getActivity(), "Network and GPS both are disabled", Toast.LENGTH_SHORT).show();
                 // can't get location
                 // GPS or Network is not enabled
                 // Ask user to enable GPS/network in settings
-
-            } else {
-                canGetLocation = true;
-                // First get location from Network Provider
-                if (isNetworkEnabled) {
-
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                            mLocationListener);
-                    Log.d("test", "Network");
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }
+                progressBar.dismiss();
+                showSettingsAlert();
+            }
+            else */
+                if (!isConnectedToInternet() ){
+                    canGetLocation=false;
+                    progressBar.dismiss();
+                    showSettingsAlert();
                 }
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
-                    if (location == null) {
+                else if (!isGPSEnabled && !isNetworkEnabled){
+                    canGetLocation=false;
+                    progressBar.dismiss();
+                    showLocationSettingsAlert();
+                }  else {
+                    canGetLocation = true;
+                    // First get location from Network Provider
+                    if (isNetworkEnabled) {
+
                         locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
+                                LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES,
                                 mLocationListener);
-                        Log.d("test", "GPS Enabled");
+                        Log.d("test", "Network");
                         if (locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            Log.d("test", "inside n/w enabled : location manager not null");
+                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                             if (location != null) {
-                                Toast.makeText(MyApplication.getAppContext(), "Displaying last known location", Toast.LENGTH_SHORT).show();
+                                Log.d("test", "location not null");
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
                             }
                         }
                     }
-                }
-
-                if(latitude != null && longitude != null) {
-                    Log.d("MapFragment", "lat : " + latitude + "long : " + longitude);
-                    address = GetAddress(latitude, longitude);
-                    Log.d("test", "" + address);
-
-                    //  removing previous markers
-                    googleMap.clear();
-
-                    //  dismissing progress bar when location is found
-                    progressBar.dismiss();
-
-                    mMarker = googleMap.addMarker(new MarkerOptions().position(
-                            new LatLng(latitude, longitude)).title("" + address));//
-
-                    googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-                        @Override
-                        public View getInfoWindow(Marker arg0) {
-                            return null;
-                        }
-
-                        @Override
-                        public View getInfoContents(Marker marker) {
-
-                            LinearLayout info = new LinearLayout(getContext());
-                            info.setOrientation(LinearLayout.VERTICAL);
-
-                            TextView title = new TextView(getContext());
-                            title.setTextColor(Color.BLACK);
-                            title.setGravity(Gravity.CENTER);
-                            //title.setTypeface(null, Typeface.BOLD);
-                            title.setText(marker.getTitle());
-
-                            //TextView snippet = new TextView(getContext());
-                            //snippet.setTextColor(Color.GRAY);
-                            //snippet.setText(marker.getSnippet());
-
-                            info.addView(title);
-                            info.setLayoutParams(new LinearLayout.LayoutParams
-                                    (500, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            //info.addView(snippet);
-
-                            return info;
-                        }
-                    });
-
-                    mMarker.showInfoWindow();
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 20));
-
-                    //making help fab invisible and share fab visible
-                    //fabHelp.setVisibility(View.GONE);
-                    //fabShare.setVisibility(View.VISIBLE);
-
-                    fabHelp.animate()
-                            .translationYBy(250)
-                            .setInterpolator(new AnticipateOvershootInterpolator())
-                            .setDuration(500)
-                            .withEndAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    fabShare.setVisibility(View.VISIBLE);
-                                    fabShare.animate().translationY(0).setDuration(500).setInterpolator(new AnticipateOvershootInterpolator());
+                    // if GPS Enabled get lat/long using GPS Services
+                    if (isGPSEnabled) {
+                        Log.d("test", "GPS Enabled");
+                        if (location == null) {
+                            locationManager.requestLocationUpdates(
+                                    LocationManager.GPS_PROVIDER,
+                                    MIN_TIME_BW_UPDATES,
+                                    MIN_DISTANCE_CHANGE_FOR_UPDATES,
+                                    mLocationListener);
+                            if (locationManager != null) {
+                                Log.d("test", "location manager not null");
+                                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                if (location != null) {
+                                    //Toast.makeText(MyApplication.getAppContext(), "Displaying last known location", Toast.LENGTH_SHORT).show();
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
                                 }
-                            });
+                            }
+                        }
+                    }
+
+                    if (latitude != null && longitude != null) {
+                        Log.d("MapFragment", "lat : " + latitude + "long : " + longitude);
+                        address = GetAddress(latitude, longitude);
+                        Log.d("test", "" + address);
+
+                    } else {
+                        getCurrentLocation();
+                    }
+                    progressBar.dismiss();
+                    updateMap();
                 }
-                else {
-                    getCurrentLocation();
-                }
-            }
 
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Unable to fetch the current location. Please check your network connection " +
                     "and GPS and try again.", Toast.LENGTH_LONG).show();
-            //getCurrentLocation();
             progressBar.dismiss();
             Log.d("MapFragment","exc : "+e);
             e.printStackTrace();
         }
     }
+
+    void updateMap() {
+        //  removing previous markers
+        googleMap.clear();
+        googleMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
+
+        Log.d("test", "add marker");
+        mMarker = googleMap.addMarker(new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("" + address));//
+
+        Log.d("test", "set info window adapter");
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(getContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                //title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                //TextView snippet = new TextView(getContext());
+                //snippet.setTextColor(Color.GRAY);
+                //snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.setLayoutParams(new LinearLayout.LayoutParams
+                        (500, LinearLayout.LayoutParams.WRAP_CONTENT));
+                //info.addView(snippet);
+
+                return info;
+            }
+        });
+
+        mMarker.showInfoWindow();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 20));
+
+        //making help fab invisible and share fab visible
+        //fabHelp.setVisibility(View.GONE);
+        //fabShare.setVisibility(View.VISIBLE);
+
+        fabHelp.animate()
+                .translationYBy(250)
+                .setInterpolator(new AnticipateOvershootInterpolator())
+                .setDuration(500)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        fabShare.setVisibility(View.VISIBLE);
+                        fabShare.animate().translationY(0).setDuration(500).setInterpolator(new AnticipateOvershootInterpolator());
+                    }
+                });
+    }
+
 /*
     void getCurrentLocation() {
         Location myLocation = googleMap.getMyLocation();
@@ -347,7 +372,7 @@ public class MapFragment extends Fragment {
      String GetAddress(double lat, double log) {
         // TODO Auto-generated method stub
         Geocoder geocoder = new Geocoder(getActivity(), Locale.ENGLISH);
-        String ret = "";
+        String ret;
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, log, 1);
             if (addresses != null) {
@@ -355,7 +380,7 @@ public class MapFragment extends Fragment {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder();
                 for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    if (returnedAddress.getAddressLine(i) == " ")
+                    if (returnedAddress.getAddressLine(i).equals(" "))
                         countSpaces++;
                     if (countSpaces > 3) {
                         strReturnedAddress.append(returnedAddress.getAddressLine(i) + "\n");
@@ -377,17 +402,32 @@ public class MapFragment extends Fragment {
         return ret;
     }
 
+    public boolean isConnectedToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+        }
+        return false;
+    }
+
     /**
      * Function to show settings alert dialog
      */
-    public void showSettingsAlert() {
+    public void showLocationSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
         // Setting Dialog Title
         alertDialog.setTitle("Attention");
 
         // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to Location settings menu?");
 
         // Setting Icon to Dialog
         //alertDialog.setIcon(R.drawable.delete);
@@ -396,6 +436,36 @@ public class MapFragment extends Fragment {
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    /**
+     * Function to show settings alert dialog
+     */
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Attention");
+        alertDialog.setMessage("Internet is not enabled. Do you want to go to settings menu?");
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.delete);
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
                 startActivity(intent);
             }
         });
@@ -435,7 +505,6 @@ public class MapFragment extends Fragment {
 
         }
     };
-
 
 }
 

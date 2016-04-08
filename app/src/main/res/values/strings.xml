@@ -29,8 +29,6 @@
     <string name="title_activity_route_planner">RoutePlanner</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_metro_services">MetroServices</string>
-    <string name="title_activity_metro_line_detail">MetroLineDetail</string>
     <string name="title_activity_auto_answer_call">AutoAnswerCall</string>
     <string name="title_activity_voice_commands">VoiceCommands</string>
     <string name="title_activity_shake">Shake</string>
