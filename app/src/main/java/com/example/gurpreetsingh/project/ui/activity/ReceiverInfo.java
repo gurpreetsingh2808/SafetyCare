@@ -1,20 +1,18 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.activity;
 
-import android.*;
 import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
-import com.github.clans.fab.FloatingActionButton;
+
+import com.example.gurpreetsingh.project.R;
+
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -33,8 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 
 ////////////////////////////////////  DONT USE NEW OPERATOR AT EVERY CALL IN ADAPTER
@@ -64,7 +60,7 @@ public class ReceiverInfo extends AppCompatActivity {
             finish();
         }
         else {
-            selectedView.setBackgroundColor(getResources().getColor(R.color.white));
+            selectedView.setBackgroundColor(getResources().getColor(com.example.gurpreetsingh.project.R.color.white));
             ivAddContact.setVisibility(View.VISIBLE);
             ivDeleteContact.setVisibility(View.GONE);
             ivReplaceContact.setVisibility(View.GONE);

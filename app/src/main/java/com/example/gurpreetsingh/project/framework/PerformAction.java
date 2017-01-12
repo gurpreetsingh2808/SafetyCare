@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.framework;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 /**
  * Created by Gurpreet Singh on 10/16/2015.
  */
-public class PerformAction extends AppCompatActivity{
+public class PerformAction{
 
     public static void textChooser(Activity callingActivity,String msg){
         Intent i = new Intent(Intent.ACTION_SEND);

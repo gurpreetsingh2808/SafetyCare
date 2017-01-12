@@ -1,22 +1,20 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
+import com.example.gurpreetsingh.project.R;
+import com.example.gurpreetsingh.project.framework.service.ShakeService;
+import com.example.gurpreetsingh.project.framework.service.VolumeService;
 
 public class AppSettingsFragment extends Fragment {
 

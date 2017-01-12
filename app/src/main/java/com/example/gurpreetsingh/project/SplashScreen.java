@@ -7,15 +7,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
+import com.example.gurpreetsingh.project.ui.activity.SignupActivity;
 
 public class SplashScreen extends AppCompatActivity {
         //extends AwesomeSplash {

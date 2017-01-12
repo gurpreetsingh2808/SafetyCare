@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.fragment;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.example.gurpreetsingh.project.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

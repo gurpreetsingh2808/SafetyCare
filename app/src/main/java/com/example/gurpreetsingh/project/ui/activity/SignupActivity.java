@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.activity;
 
 import android.content.Intent;
 import android.os.Build;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.example.gurpreetsingh.project.R;
 
 public class SignupActivity extends AppCompatActivity {
 

@@ -1,18 +1,29 @@
 package com.example.gurpreetsingh.project;
 
 
+import android.*;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,9 +31,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.gurpreetsingh.project.component.dialog.DialogManager;
+import com.example.gurpreetsingh.project.ui.fragment.MapFragment;
+import com.example.gurpreetsingh.project.util.LocationUtils;
+import com.example.gurpreetsingh.project.util.PlaystoreHelper;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -34,62 +54,41 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static android.content.Context.LOCATION_SERVICE;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback,
-        LocationSource,
-        com.google.android.gms.location.LocationListener {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
-
+    private static final String TAG = NearbyHelpFragment.class.getSimpleName();
     private static final int PERMISSION_REQUEST_CODE = 1;
     RequestQueue mRequestQueue = VolleySingleton.getInstance().getmRequestQueue();
-
     // flag for GPS status
     boolean isGPSEnabled = false;
-
     // flag for network status
     boolean isNetworkEnabled = false;
-
     boolean canGetLocation = false;
-
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-
     // The minimum time between updates in milliseconds
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
     LocationManager locationManager;
     Location location;
+    public Location mLastLocation;
+    private ProgressDialog progressBar;
+    public String address;
 
     public static Double latitude,longitude;
     GoogleMap googleMap;
     Marker mMarker;
-    ///////private LocationListener mLocationListener = MapFragment.mLocationListener;
-    public  final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            //your code here
-            // Toast.makeText(getActivity(), "Location changed", Toast.LENGTH_SHORT).show();
+    MapView mMapView;
+    private GoogleApiClient mGoogleApiClient;
+    private String url = null;
 
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            // Toast.makeText(getActivity(), "Status is changed to " + status, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            // Toast.makeText(getActivity(), "Provider :" + provider + "is now enabled", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            // Toast.makeText(getActivity(), "Provider :" + provider + "is now disabled", Toast.LENGTH_SHORT).show();
-
-        }
-    };
 
     public NearbyHelpFragment() {
         // Required empty public constructor
@@ -101,132 +100,133 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_nearby_help, container, false);
         Log.d("menu", "on create view");
+        mMapView = (MapView) v.findViewById(R.id.mapViewNearby);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            // First we need to check availability of play services
+            if (new PlaystoreHelper().checkPlayServices(getActivity())) {
+                // Building the GoogleApi client
+                buildGoogleApiClient();
+                mGoogleApiClient.connect();
+            }
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMapView.getMapAsync(this);
+
+        if (savedInstanceState == null) {
+            Log.d("test", "first time on create view of map ");
+        } else {
+            Log.d("test", "save instance on create view");
+            //mMapFragment = getSupportFragmentManager().getFragment(savedInstanceState,"MY_FRAGMENT");
+            //setFragment();
+        }
         return v;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Log.d("menu", "on resume");
-        setUpMap();
-
-        if(latitude==null && longitude==null) {
-////////////            latitude = MapFragment.latitude;
-///////////            longitude = MapFragment.longitude;
-            Log.d("menu", "on resume nearby " + latitude + " " + longitude);
+        Log.d("test", "onresume");
+        if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
         }
 
-        // if mLastLocation was not retrieved successfully in mapfragment due to disabled mLastLocation
-        if(latitude==null && longitude==null)  {
-            getCurrentLocation();
-            Log.d("menu", "on resume nearby " + latitude + " " + longitude);
+        //progressBar.show();
+        final Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                /*if (mGoogleApiClient.isConnected()) {
+                    displayLocationUI();
+                }*/
+            }
+        }, 1500);
+
+
+    }
+
+
+    private void getLocation() {
+        if (!LocationUtils.isGPSEnabled(getActivity())) {
+            progressBar.dismiss();
+            DialogManager.showLocationSettingsAlert(getActivity());
+            ///locationDialog = DialogManager.showLocationDialog(this);
         }
+        //  check for run time permissions if gps is enabled
+
         else {
-            // not working due to non static-made it static check
-            //address = MapFragment.getInstance().GetAddress(latitude, longitude);
-            //Log.d("menu", "" + address);
-            mMarker = googleMap.addMarker(new MarkerOptions().position(
-                    new LatLng(latitude, longitude)).title("You are here"));//
-            mMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            mMarker.showInfoWindow();
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_DENIED && ActivityCompat.checkSelfPermission(getContext(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
 
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
-        }
+                ActivityCompat.requestPermissions(getActivity(), new String[]
+                                {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        PERMISSION_REQUEST_CODE);
+                Log.d(TAG, "onClick: should allow permission");
 
+            } else {
+                mLastLocation = LocationServices.FusedLocationApi
+                        .getLastLocation(mGoogleApiClient);
 
-    }
+                if (mLastLocation != null) {
+                    latitude = mLastLocation.getLatitude();
+                    longitude = mLastLocation.getLongitude();
 
-    void setUpMap()  {
-        try {
-            if (googleMap == null) {
-                Log.d("menu", "map is null");
-                // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-                SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.nearbyMap);
-                mapFragment.getMapAsync(this);
-                Log.d("menu", "map instantiated");
-            }
-        } catch (Exception e) {
-            Log.d("menu", "map exception "+e);
+                    Log.d(TAG, "getLocation: lat " + latitude);
+                    Log.d(TAG, "getLocation: lng " + longitude);
+                    sendJsonRequest(url);
+                    /*
 
-        }
-    }
+                    SharedPreferenceData.getInstance().saveLatitude(Double.valueOf(latitude).toString());
+                    SharedPreferenceData.getInstance().saveLongitude(Double.valueOf(longitude).toString());
+*/
+
+                    //  mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12));
 
 
-    void getCurrentLocation()   {
+///                    if (!ConnectivityUtil.isConnected(getContext())) {
+/////                        SnackBarManager.renderNoConnectionSnackBar(NearbyOfferActivity.this);
+///                    }
 
-        if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
 
-        try {
-            locationManager = (LocationManager) SafetyCareApplication.getAppContext().getSystemService(SafetyCareApplication.LOCATION_SERVICE);
+                    //UPDATE LOCATION IN TOOLBAR OR SOMEWHERE
 
-            // getting GPS status
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            // getting network status
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
-                //Toast.makeText(getActivity(), "No network provider is enabled", Toast.LENGTH_SHORT).show();
-                // can't get mLastLocation
-                // GPS or Network is not enabled
-                // Ask user to enable GPS/network in settings
-
-            }
-            else {
-                canGetLocation = true;
-                // First get mLastLocation from Network Provider
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                            mLocationListener);
-                    Log.d("test", "Network");
-                    if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
+                } else {
+/*
+                    Snackbar mSnackBar = SnackBarManager.getSnackbar(findViewById(android.R.id.content),
+                            "Couldn't get the mLastLocation.", NearbyOfferActivity.this);
+                    mSnackBar.setAction("TRY AGAIN", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mGoogleApiClient.connect();
+                            getLocation();
                         }
-                    }
+                    });
+                    mSnackBar.show();*/
+                    Log.d(TAG, "getLocation: Couldn't get the mLastLocation. Make sure mLastLocation is enabled on the device");
                 }
-                // if GPS Enabled get lat/long using GPS Services
-                if (isGPSEnabled) {
-                    if (location == null) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES,
-                                mLocationListener);
-                        Log.d("test", "GPS Enabled");
-                        if (locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            }
-                        }
-                    }
-                }
-                //address=GetAddress(latitude, longitude);
-                //Log.d("test",""+address);
-                mMarker=googleMap.addMarker(new MarkerOptions().position(
-                        new LatLng(latitude, longitude)).title("You are "));//
-                mMarker.showInfoWindow();
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
             }
-
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "Unable to fetch the current mLastLocation", Toast.LENGTH_SHORT).show();
-            Log.d("menu","map exception "+e);
         }
     }
 
+
+    void updateUrl(String url) {
+        this.url = url;
+    }
 
     void sendJsonRequest(String url)  {
 
@@ -330,7 +330,7 @@ void addOnMap(int len, String[] name, Double[] lat, Double[] lng)  {
             return;
         }
 
-        this.googleMap.setLocationSource(this);
+        //this.googleMap.setLocationSource(this);
         this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         this.googleMap.setMyLocationEnabled(true);
 
@@ -338,17 +338,33 @@ void addOnMap(int len, String[] name, Double[] lat, Double[] lng)  {
     }
 
     @Override
-    public void activate(OnLocationChangedListener onLocationChangedListener) {
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_DENIED && ActivityCompat.checkSelfPermission(getContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]
+                            {android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+
+        } else {
+            Log.d(TAG, "onConnected: google client connected and permission granted");
+            getLocation();
+            /*LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient,
+                    REQUEST,
+                    this);  // LocationListener*/
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
 
     }
 
     @Override
-    public void deactivate() {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

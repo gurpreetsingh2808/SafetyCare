@@ -1,11 +1,10 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.speech.RecognizerIntent;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.gurpreetsingh.project.framework.PerformAction;
+import com.example.gurpreetsingh.project.R;
+import com.example.gurpreetsingh.project.ui.activity.ReceiverInfo;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -102,7 +105,7 @@ public class VoiceCommandsFragment extends Fragment {
             case "message":
                 Toast.makeText(getActivity(),"working "+action,Toast.LENGTH_SHORT).show();
                 Log.d("message", "inside switch");
-                for(int i=0; i<ReceiverInfo.contactCounter; i++)  {
+                for(int i = 0; i< ReceiverInfo.contactCounter; i++)  {
                     contactNumber = sharedPreferences.getString("EmergencyContactNumber["+i+"]","121");
                     PerformAction.message(contactNumber, "I am  in trouble. Do contact me fast.");
                     Log.d("message", "message sent");
