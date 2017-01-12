@@ -474,7 +474,7 @@ mMapView.getMapAsync(this);
                         strReturnedAddress.append(" "+returnedAddress.getAddressLine(i) + "\n");
                         countSpaces = 0;
                     } else {
-                        strReturnedAddress.append(returnedAddress.getAddressLine(i));
+                        strReturnedAddress.append(" "+returnedAddress.getAddressLine(i));
                     }
                 }
                 ret = strReturnedAddress.toString();
