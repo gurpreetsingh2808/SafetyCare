@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.framework.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.example.gurpreetsingh.project.framework.SettingsContentObserver;
 
 public class VolumeService extends Service {
     SettingsContentObserver mSettingsContentObserver;

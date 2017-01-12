@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.framework;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

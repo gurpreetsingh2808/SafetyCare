@@ -1,16 +1,18 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import com.github.clans.fab.FloatingActionButton;
+
+import com.example.gurpreetsingh.project.MainMapScreen;
+import com.example.gurpreetsingh.project.R;
+import com.example.gurpreetsingh.project.framework.service.ShakeService;
+import com.example.gurpreetsingh.project.framework.service.VolumeService;
 
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;

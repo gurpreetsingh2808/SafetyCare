@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,21 +28,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.gurpreetsingh.project.ui.fragment.AppSettingsFragment;
+import com.example.gurpreetsingh.project.ui.fragment.HelplineNumbers;
+import com.example.gurpreetsingh.project.ui.fragment.MapFragment;
+import com.example.gurpreetsingh.project.ui.fragment.SharePicture;
+import com.example.gurpreetsingh.project.ui.fragment.VoiceCommandsFragment;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -361,7 +355,7 @@ public class MainMapScreen extends AppCompatActivity {
                 url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470" +
                         "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
 
             Log.d("menu", "url : "+url);
             return true;
@@ -374,7 +368,7 @@ public class MainMapScreen extends AppCompatActivity {
             else
                 url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.doctor) {
@@ -386,7 +380,7 @@ public class MainMapScreen extends AppCompatActivity {
             else
                 url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.trainStaion) {
@@ -398,7 +392,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.subwayStaion) {
@@ -410,7 +404,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.busStaion) {
@@ -421,7 +415,7 @@ public class MainMapScreen extends AppCompatActivity {
                 url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=bus_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
 
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.gasStaion) {
@@ -433,7 +427,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.taxi_stand) {
@@ -445,7 +439,7 @@ public class MainMapScreen extends AppCompatActivity {
 
             //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
             Log.d("menu", "url's fine");
-            nearbyHelpFragment.sendJsonRequest(url);
+            nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         ///////////////     NEARBY FRAGMENT END

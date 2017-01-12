@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.gurpreetsingh.project.ReceiverInfo">
+    tools:context="com.example.gurpreetsingh.project.ui.activity.ReceiverInfo">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarReceiverInfo"

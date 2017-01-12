@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.util;
 
 import android.app.Activity;
 

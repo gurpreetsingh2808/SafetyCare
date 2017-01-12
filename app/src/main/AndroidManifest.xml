@@ -65,19 +65,19 @@
 
         </activity>
         <activity
-            android:name=".NumberVerify"
+            android:name=".ui.activity.NumberVerify"
             android:label="Verification"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".UserInformation"
+            android:name=".ui.activity.UserInformation"
             android:label="@string/title_activity_user_information"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ReceiverInfo"
+            android:name=".ui.activity.ReceiverInfo"
             android:label="@string/title_activity_receiver_info"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".AppSettings"
+            android:name=".ui.activity.AppSettings"
             android:label="@string/title_activity_app_settings"
             android:screenOrientation="portrait">
 
@@ -108,7 +108,7 @@
         </activity>
 
         <service
-            android:name=".VolumeService"
+            android:name=".framework.service.VolumeService"
             android:enabled="true"
             android:exported="true"></service>
         <!--
@@ -128,12 +128,12 @@
         </service>
         -->
         <service
-            android:name=".ShakeService"
+            android:name=".framework.service.ShakeService"
             android:enabled="true"
             android:exported="true"></service>
 
-        <activity android:name=".NearbyPlaces"></activity>
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".ui.activity.NearbyPlaces"></activity>
+        <activity android:name=".ui.activity.SignupActivity"></activity>
     </application>
 
 </manifest>

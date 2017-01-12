@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.framework;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import com.example.gurpreetsingh.project.MainMapScreen;
 
 /**
  * Created by Gurpreet Singh on 10/22/2015.
