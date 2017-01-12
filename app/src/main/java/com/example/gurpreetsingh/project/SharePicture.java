@@ -202,6 +202,7 @@ public class SharePicture extends Fragment {
     }
 
     private String savedImageName() throws IOException {
+
         File image=null;
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

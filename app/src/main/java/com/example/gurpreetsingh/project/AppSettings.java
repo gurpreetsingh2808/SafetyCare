@@ -18,7 +18,7 @@ import android.widget.Switch;
 
 public class AppSettings extends AppCompatActivity {
     Button continueButton;
-    FloatingActionButton myFab;
+    Button myFab;
     Switch switchFake, switchAuto, switchShake, switchQuick;
     Intent intentVolumeService, intentShakeService;
 
@@ -29,7 +29,10 @@ public class AppSettings extends AppCompatActivity {
 
         Toolbar toolbar4 = (Toolbar) findViewById(R.id.toolbarSettings);
         setSupportActionBar(toolbar4);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar4.setTitle(getString(R.string.action_settings));
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         //switchAuto=(Switch)findViewById(R.id.switchAuto);
         //switchFake=(Switch)findViewById(R.id.switchFake);
@@ -53,7 +56,7 @@ public class AppSettings extends AppCompatActivity {
                     stopService(intentVolumeService);
                     Log.d("AppSettings"," not checked");
                 }
-                editor.commit();
+                editor.apply();
             }
         });
 
@@ -73,11 +76,11 @@ public class AppSettings extends AppCompatActivity {
                     stopService(intentShakeService);
                     Log.d("AppSettings", " not checked");
                 }
-                editor.commit();
+                editor.apply();
             }
         });
 
-        myFab = (FloatingActionButton) findViewById(R.id.fab4);
+        myFab = (Button) findViewById(R.id.fab4);
         myFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

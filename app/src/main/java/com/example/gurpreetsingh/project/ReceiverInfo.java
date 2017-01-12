@@ -1,9 +1,14 @@
 package com.example.gurpreetsingh.project;
 
+import android.*;
+import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +16,7 @@ import android.os.Vibrator;
 import android.provider.ContactsContract;
 import com.github.clans.fab.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,13 +26,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import java.util.ArrayList;
-
+import java.util.HashSet;
+import java.util.Set;
 
 
 ////////////////////////////////////  DONT USE NEW OPERATOR AT EVERY CALL IN ADAPTER
@@ -35,8 +43,9 @@ import java.util.ArrayList;
 
 public class ReceiverInfo extends AppCompatActivity {
 
+    private static final int PERMISSION_CONTACTS_REQUEST_CODE = 1000;
     TextInputLayout etContacts;
-    FloatingActionButton myFab;
+    Button myFab;
     final int PICK_CONTACT=1;
     String contactName=null, contactNumber=null, action;
     ListView lvContacts;
@@ -140,14 +149,12 @@ public class ReceiverInfo extends AppCompatActivity {
         ivAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                action = "add";
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
+                askForContactsPermission();
 
             }
         });
 
-        myFab = (FloatingActionButton) findViewById(R.id.fab3);
+        myFab = (Button) findViewById(R.id.fab3);
         myFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +169,29 @@ public class ReceiverInfo extends AppCompatActivity {
             }
         });
     }
+
+    private void askForContactsPermission() {
+        //  add already added accounts in device to autocomplete
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            ActivityCompat.requestPermissions(ReceiverInfo.this, new String[]
+                            {Manifest.permission.READ_CONTACTS, android.Manifest.permission.GET_ACCOUNTS},
+                    PERMISSION_CONTACTS_REQUEST_CODE);
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            //return;
+        } else {
+            action = "add";
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, PICK_CONTACT);
+    }
+    }
+
 
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -191,7 +221,7 @@ public class ReceiverInfo extends AppCompatActivity {
 
                     //  Find contact based on name.
 //
-                    if (cursor.moveToFirst()) {
+                    if (cursor != null && cursor.moveToFirst()) {
 
                         contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                         Log.d("gp", "contact name " + contactName);
@@ -199,7 +229,7 @@ public class ReceiverInfo extends AppCompatActivity {
                         ContentResolver cr = getContentResolver();
                         Cursor mCursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
                                 "DISPLAY_NAME = '" + contactName + "'", null, null);
-                        if (mCursor.moveToFirst()) {
+                        if (mCursor != null && mCursor.moveToFirst()) {
                             Log.d("gp", "moved to first");
                             String contactId = mCursor.getString(mCursor.getColumnIndex(ContactsContract.Contacts._ID));
                             Log.d("gp", "contact id " + contactId);
@@ -211,7 +241,7 @@ public class ReceiverInfo extends AppCompatActivity {
                                     Phone.CONTACT_ID + " = " + contactId, null, null);
                             Log.d("gp", "cursor phones ok");
 
-                            if (phones.moveToFirst()) {
+                            if (phones != null && phones.moveToFirst()) {
                                 try {
                                     contactNumber = phones.getString(phones.getColumnIndex(Phone.NUMBER));
                                 } catch (Exception e) {
@@ -291,7 +321,7 @@ public class ReceiverInfo extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("EmergencyContactName["+index+"]", contactName);
         editor.putString("EmergencyContactNumber["+index+"]", contactNumber);
-        editor.commit();
+        editor.apply();
         Toast.makeText(ReceiverInfo.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
     }
 

@@ -11,7 +11,7 @@
         android:id="@+id/toolbarNumberVerify"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:background="@color/primaryColor"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
@@ -166,8 +166,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="8dp"
-            fab:fab_colorNormal="@color/accentColor"
-            fab:fab_colorPressed="@color/accentColor"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorAccent"
 
             />
     </RelativeLayout>

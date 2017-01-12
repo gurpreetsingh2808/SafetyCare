@@ -2,13 +2,14 @@ package com.example.gurpreetsingh.project;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 /**
  * Created by Gurpreet Singh on 10/25/2015.
  */
-public class MyApplication extends Application {
+public class SafetyCareApplication extends Application {
 
-    private static MyApplication sInstance;
+    private static SafetyCareApplication sInstance;
 
     @Override
     public void onCreate() {
@@ -16,7 +17,13 @@ public class MyApplication extends Application {
         sInstance=this;
     }
 
-    public static MyApplication getsInstance(){
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    public static SafetyCareApplication getsInstance(){
         return sInstance;
     }
 

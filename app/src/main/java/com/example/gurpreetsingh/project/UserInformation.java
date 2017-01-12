@@ -92,6 +92,7 @@ public class UserInformation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (cbShowPass.isChecked()) {
+
                     etPassword.getEditText().setInputType(InputType.TYPE_CLASS_TEXT);
                     etConfirmPassword.getEditText().setInputType(InputType.TYPE_CLASS_TEXT);
                 }
@@ -224,8 +225,6 @@ public class UserInformation extends AppCompatActivity {
             }
         }
     }
-
-    String mCurrentPhotoPath;
 
     private void saveToInternalSorage()  {
         BufferedOutputStream out = null;

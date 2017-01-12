@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primaryColor">#2196F3</color>
-    <color name="primaryColorDark">#1976D2</color>
-    <color name="accentColor">#FF5722</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF5722</color>
+
     <color name="textColor">#000000</color>
     <color name="hintColor">#9E9E9E</color>
     <color name="white">#ffffff</color>
@@ -16,5 +17,10 @@
     <color name="rapid">#ffffff</color>
     <color name="yellow">#FFD54F</color>
     <color name="item_pressed">#BDBDBD</color>
+    <color name="black">#000</color>
+
+    <color name="signUpTruecallerColor">#0091EA</color>
+    <color name="signInFbColor">#3F51B5</color>
+    <color name="signInGoogleColor">#F44336</color>
 </resources>
 

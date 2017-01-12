@@ -11,8 +11,9 @@
         android:id="@+id/toolbarSettings"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"
-        android:background="@color/primaryColor"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
+        android:title="@string/action_settings"
         app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <RelativeLayout
@@ -96,16 +97,16 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" />
 
-        <com.github.clans.fab.FloatingActionButton xmlns:fab="http://schemas.android.com/apk/res-auto"
+        <Button
             android:id="@+id/fab4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_play_arrow_white_24dp"
-            fab:fab_colorNormal="@color/accentColor"
-            fab:fab_colorPressed="@color/accentColor" />
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
+            android:text="@string/next"/>
 
 
         <TextView

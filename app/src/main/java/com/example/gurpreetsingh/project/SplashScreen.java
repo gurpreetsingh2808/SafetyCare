@@ -3,6 +3,7 @@ package com.example.gurpreetsingh.project;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
-import com.viksaa.sssplash.lib.activity.AwesomeSplash;
-import com.viksaa.sssplash.lib.model.ConfigSplash;
 
 public class SplashScreen extends AppCompatActivity {
         //extends AwesomeSplash {
@@ -29,6 +28,12 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        // Set the status bar to dark-semi-transparentish
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -36,7 +41,7 @@ public class SplashScreen extends AppCompatActivity {
                 checkRegistraion();
                 finish();
             }
-        },1500);
+        },1000);
     }
 
 /*
@@ -70,7 +75,7 @@ public class SplashScreen extends AppCompatActivity {
         //  checking the collected data and putting it to screen
         if (email.equals(DEFAULT) || password.equals(DEFAULT)) {
             Toast.makeText(getApplicationContext(), "You have not registered yet. Please register first.", Toast.LENGTH_SHORT).show();
-            Intent mIntent=new Intent(SplashScreen.this,NumberVerify.class);
+            Intent mIntent=new Intent(SplashScreen.this,SignupActivity.class);
             startActivity(mIntent);
         } else {
             //Intent mIntent=new Intent(SplashScreen.this,AppSettings.class);

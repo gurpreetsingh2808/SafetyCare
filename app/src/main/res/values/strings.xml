@@ -33,7 +33,7 @@
     <string name="title_activity_voice_commands">VoiceCommands</string>
     <string name="title_activity_shake">Shake</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_l">Sign in</string>
 
@@ -49,5 +49,16 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!--        LOGIN       -->
+
     <string name="title_activity_login">Login</string>
+    <string name="signUpVia">Sign Up Via</string>
+    <string name="signInFacebook">FACEBOOK</string>
+    <string name="signInGoogle">GOOGLE</string>
+    <string name="signInTruecaller">TRUECALLER</string>
+
+    <string name="next">NEXT</string>
+    <string name="titleEmergency">Emergency Contacts</string>
+
 </resources>
