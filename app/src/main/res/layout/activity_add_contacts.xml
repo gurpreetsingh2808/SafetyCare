@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.gurpreetsingh.project.ui.activity.ReceiverInfo">
+    tools:context="com.example.gurpreetsingh.project.ui.activity.AddContactsActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarReceiverInfo"
@@ -93,26 +93,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        >
 
         <TextView
             android:id="@+id/textViewInstruction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
             android:text="Tap on the icon above to add contacts"
             android:textColor="@color/item_pressed"
             android:visibility="gone"
             android:textSize="20sp" />
 
-        <ListView
-            android:id="@+id/listViewContacts"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvContacts"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            />
 
         <Button
             android:id="@+id/fab3"
@@ -120,10 +118,12 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
-            android:text="@string/next"/>
+            android:text="@string/next"
+            fontPath="fonts/Brandon_bold.otf"
+            tools:ignore="MissingPrefix" />
 
     </RelativeLayout>
 </LinearLayout>

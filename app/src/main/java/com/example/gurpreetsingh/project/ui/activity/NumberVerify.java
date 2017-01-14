@@ -69,7 +69,7 @@ public class NumberVerify extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
 
         //  setting custom adapter to spinner
-        spinner.setAdapter(new MyAdapter(NumberVerify.this, R.layout.row, countryCodes));
+        spinner.setAdapter(new MyAdapter(NumberVerify.this, R.layout.item_contact, countryCodes));
 
         //  storing selected value
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -89,8 +89,8 @@ public class NumberVerify extends AppCompatActivity {
         });
 
         //getResources().getColor(R.color.accentColor);
-        //myFab.setColorNormal(R.color.red);
-        //myFab.setColorPressed(R.color.primaryColor);
+        //buttonNext.setColorNormal(R.color.red);
+        //buttonNext.setColorPressed(R.color.primaryColor);
 
         // setting action to FAB
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +158,7 @@ public class NumberVerify extends AppCompatActivity {
         public View getCustomView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.row, parent, false);
+            View row = inflater.inflate(R.layout.item_contact, parent, false);
             //////      extra line for colour
             row.setBackgroundColor(getResources().getColor(R.color.white));
             TextView label = (TextView) row.findViewById(R.id.top);

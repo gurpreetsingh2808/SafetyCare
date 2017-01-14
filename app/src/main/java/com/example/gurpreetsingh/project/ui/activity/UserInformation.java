@@ -95,7 +95,7 @@ public class UserInformation extends AppCompatActivity {
             }
         });
 
-        //myFab.setColorNormal(R.color.accentColor);
+        //buttonNext.setColorNormal(R.color.accentColor);
         // moving to the next screen
         myFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +110,7 @@ public class UserInformation extends AppCompatActivity {
                         Log.d("user","exception "+e);
                     }
                     Log.d("user", "image saved to internal");
-                    Intent i = new Intent(UserInformation.this, ReceiverInfo.class);
+                    Intent i = new Intent(UserInformation.this, AddContactsActivity.class);
                     startActivity(i);
                     finish();
                 }

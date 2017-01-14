@@ -1,6 +1,7 @@
 package com.example.gurpreetsingh.project.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +10,10 @@ import android.view.WindowManager;
 
 import com.example.gurpreetsingh.project.R;
 
+
 public class SignupActivity extends AppCompatActivity {
+
+    AnimationDrawable anim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,20 +25,41 @@ public class SignupActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+/*
+        RelativeLayout container = (RelativeLayout) findViewById(R.id.rlSignup);
+
+        anim = (AnimationDrawable) container.getBackground();
+        anim.setEnterFadeDuration(6000);
+        anim.setExitFadeDuration(2000);*/
+    }
+/*
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (anim != null && !anim.isRunning())
+            anim.start();
     }
 
+    // Stopping animation:- stop the animation on onPause.
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (anim != null && anim.isRunning())
+            anim.stop();
+    }
+*/
+
     public void signUpUsingGoogle(View view) {
+        moveToNextActivity();
     }
 
     public void signUpUsingFacebook(View view) {
-    }
-
-    public void signUpUsingTruecaller(View view) {
         moveToNextActivity();
     }
 
     private void moveToNextActivity() {
-        Intent i = new Intent(SignupActivity.this, ReceiverInfo.class);
+        Intent i = new Intent(SignupActivity.this, AddContactsActivity.class);
         startActivity(i);
         finish();
     }

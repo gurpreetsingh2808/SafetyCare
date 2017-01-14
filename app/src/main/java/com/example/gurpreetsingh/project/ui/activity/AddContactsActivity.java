@@ -8,22 +8,21 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Vibrator;
 import android.provider.ContactsContract;
 
+import com.example.gurpreetsingh.project.Contact;
 import com.example.gurpreetsingh.project.R;
+import com.example.gurpreetsingh.project.ui.adapter.EmergencyContactsAdapter;
+import com.example.gurpreetsingh.project.util.AppUtils;
 
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,16 +31,17 @@ import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import java.util.ArrayList;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 ////////////////////////////////////  DONT USE NEW OPERATOR AT EVERY CALL IN ADAPTER
 
 
 
-public class ReceiverInfo extends AppCompatActivity {
+public class AddContactsActivity extends AppCompatActivity implements EmergencyContactsAdapter.ItemListener{
 
     private static final int PERMISSION_CONTACTS_REQUEST_CODE = 1000;
-    TextInputLayout etContacts;
-    Button myFab;
+    Button buttonNext;
     final int PICK_CONTACT=1;
     String contactName=null, contactNumber=null, action;
     ListView lvContacts;
@@ -52,7 +52,14 @@ public class ReceiverInfo extends AppCompatActivity {
     ArrayList<String> listNumber=new ArrayList<String>();
     View selectedView=null;
     TextView tvInstruction;
-    /////////////////MyAdapter contactsListAdapter = new MyAdapter(this, R.layout.row, listName);
+    private RecyclerView rvContacts;
+    private EmergencyContactsAdapter mAdapter;
+
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     public void onBackPressed() {
@@ -64,7 +71,7 @@ public class ReceiverInfo extends AppCompatActivity {
             ivAddContact.setVisibility(View.VISIBLE);
             ivDeleteContact.setVisibility(View.GONE);
             ivReplaceContact.setVisibility(View.GONE);
-            myFab.setVisibility(View.VISIBLE);
+            buttonNext.setVisibility(View.VISIBLE);
             selectedIndex=-1;
         }
     }
@@ -72,11 +79,19 @@ public class ReceiverInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_receiver_info);
+        AppUtils.initializeCalligraphy();
+        setContentView(R.layout.activity_add_contacts);
 
         Toolbar toolbar3 = (Toolbar) findViewById(R.id.toolbarReceiverInfo);
         setSupportActionBar(toolbar3);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvContacts.setLayoutManager(mLayoutManager);
+        mAdapter = new EmergencyContactsAdapter(this);
+
+
 
         Log.d("receiverinfo","on create");
         tvInstruction=(TextView)findViewById(R.id.textViewInstruction);
@@ -87,43 +102,18 @@ public class ReceiverInfo extends AppCompatActivity {
             tvInstruction.setVisibility(View.VISIBLE);
         }
 
-        Log.d("receiverinfo","list view");
-        lvContacts = (ListView) findViewById(R.id.listViewContacts);
-        lvContacts.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if(selectedView != null)  {
-                    selectedView.setBackgroundColor(getResources().getColor(R.color.white));
-                }
-                Vibrator vibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
-                vibrator.vibrate(100);
-
-                view.setBackgroundColor(getResources().getColor(R.color.item_pressed));
-
-                ivAddContact.setVisibility(View.GONE);
-                ivDeleteContact.setVisibility(View.VISIBLE);
-                ivReplaceContact.setVisibility(View.VISIBLE);
-                myFab.setVisibility(View.GONE);
-
-                selectedIndex = position;
-                selectedView = view;
-                return false;
-            }
-        });
-
         ivDeleteContact = (ImageView)findViewById(R.id.imageViewDeleteContact);
         ivDeleteContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listName.remove(selectedIndex);
                 listNumber.remove(selectedIndex);
-                lvContacts.setAdapter(new MyAdapter(ReceiverInfo.this, R.layout.row, listName));
+                //lvContacts.setAdapter(new MyAdapter(AddContactsActivity.this, R.layout.item_contact, listName));
                 //////////////contactsListAdapter.notifyDataSetChanged();
                 ivAddContact.setVisibility(View.VISIBLE);
                 ivDeleteContact.setVisibility(View.GONE);
                 ivReplaceContact.setVisibility(View.GONE);
-                myFab.setVisibility(View.VISIBLE);
+                buttonNext.setVisibility(View.VISIBLE);
 
                 contactCounter--;
             }
@@ -150,15 +140,15 @@ public class ReceiverInfo extends AppCompatActivity {
             }
         });
 
-        myFab = (Button) findViewById(R.id.fab3);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        buttonNext = (Button) findViewById(R.id.fab3);
+        buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(contactCounter==0)  {
-                    Toast.makeText(ReceiverInfo.this, "Please add at least one contact", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddContactsActivity.this, "Please add at least one contact", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent i = new Intent(ReceiverInfo.this, AppSettings.class);
+                    Intent i = new Intent(AddContactsActivity.this, AppSettings.class);
                     startActivity(i);
                     finish();
                 }
@@ -171,7 +161,7 @@ public class ReceiverInfo extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
-            ActivityCompat.requestPermissions(ReceiverInfo.this, new String[]
+            ActivityCompat.requestPermissions(AddContactsActivity.this, new String[]
                             {Manifest.permission.READ_CONTACTS, android.Manifest.permission.GET_ACCOUNTS},
                     PERMISSION_CONTACTS_REQUEST_CODE);
             // here to request the missing permissions, and then overriding
@@ -203,7 +193,7 @@ public class ReceiverInfo extends AppCompatActivity {
                     /* Queries the user dictionary and returns results
                     mCursor = getContentResolver().query(
                             UserDictionary.Words.CONTENT_URI,   // The content URI of the words table
-                            mProjection,                        // The columns to return for each row
+                            mProjection,                        // The columns to return for each item_contact
                             mSelectionClause                    // Selection criteria
                             mSelectionArgs,                     // Selection criteria
                             mSortOrder);                        // The sort order for the returned rows
@@ -268,42 +258,42 @@ public class ReceiverInfo extends AppCompatActivity {
                         cursor.close();
 
                         if(action.equals("add")) {
-                            if(contactCounter>=5)  {
-                                Toast.makeText(ReceiverInfo.this, "Sorry, you can't add more than 5 contacts", Toast.LENGTH_SHORT).show();
+                            if(contactCounter >= 5)  {
+                                Toast.makeText(AddContactsActivity.this, "Sorry, you can't add more than 5 contacts", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 if(listName.contains(contactName) || listNumber.contains(contactNumber))  {
-                                    Toast.makeText(ReceiverInfo.this, "Contact already added. Please select different contact", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddContactsActivity.this, "Contact already added. Please select different contact", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    listName.add(contactName);
-                                    listNumber.add(contactNumber);
-                                    lvContacts.setAdapter(new MyAdapter(this, R.layout.row, listName));
+                                    mAdapter.add(new Contact(contactName, contactNumber));
+                                    if(mAdapter == null) {
+                                        rvContacts.setAdapter(mAdapter);
+                                    }
                                     contactCounter++;
-
                                     saveData(contactCounter);
                                 }
                             }
                         }
                         else if(action.equals("replace")) {
                             if(listName.contains(contactName) || listNumber.contains(contactNumber))  {
-                                Toast.makeText(ReceiverInfo.this, "Contact already added. Please select different contact", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddContactsActivity.this, "Contact already added. Please select different contact", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 // remove previous contact
-                                listName.remove(selectedIndex);
+                                /*listName.remove(selectedIndex);
                                 listNumber.remove(selectedIndex);
                                 // add new contact to that position
                                 listName.add(selectedIndex, contactName);
                                 listNumber.add(selectedIndex, contactNumber);
-                                lvContacts.setAdapter(new MyAdapter(this, R.layout.row, listName));
+                                lvContacts.setAdapter(new MyAdapter(this, R.layout.item_contact, listName));
 
                                 ivAddContact.setVisibility(View.VISIBLE);
                                 ivDeleteContact.setVisibility(View.GONE);
                                 ivReplaceContact.setVisibility(View.GONE);
-                                myFab.setVisibility(View.VISIBLE);
+                                buttonNext.setVisibility(View.VISIBLE);
 
-                                saveData(selectedIndex);
+                                saveData(selectedIndex);*/
                             }
                         }
                     }
@@ -318,40 +308,14 @@ public class ReceiverInfo extends AppCompatActivity {
         editor.putString("EmergencyContactName["+index+"]", contactName);
         editor.putString("EmergencyContactNumber["+index+"]", contactNumber);
         editor.apply();
-        Toast.makeText(ReceiverInfo.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddContactsActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemClick(Contact contact, int position) {
+
     }
 
     //  custom adapter for listview(country codes)
-    class MyAdapter extends ArrayAdapter<String> {
 
-        public MyAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-            super(context, textViewResourceId, objects);
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        public View getCustomView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.row, parent, false);
-            row.setBackgroundColor(getResources().getColor(R.color.white));
-            //top
-            TextView label = (TextView) row.findViewById(R.id.top);
-            label.setText(listNumber.get(position));
-
-            //bottom
-            TextView sub = (TextView) row.findViewById(R.id.bottom);
-            sub.setText(listName.get(position));
-
-            return row;
-        }
-    }
 }

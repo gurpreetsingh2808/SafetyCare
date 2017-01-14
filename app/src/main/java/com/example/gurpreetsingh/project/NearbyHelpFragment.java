@@ -187,7 +187,9 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback,
 
                     Log.d(TAG, "getLocation: lat " + latitude);
                     Log.d(TAG, "getLocation: lng " + longitude);
-                    sendJsonRequest(url);
+                    if(url != null) {
+                        //sendJsonRequest(url);
+                    }
                     /*
 
                     SharedPreferenceData.getInstance().saveLatitude(Double.valueOf(latitude).toString());
@@ -226,6 +228,7 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback,
 
     void updateUrl(String url) {
         this.url = url;
+        sendJsonRequest(url);
     }
 
     void sendJsonRequest(String url)  {
@@ -263,18 +266,22 @@ public class NearbyHelpFragment extends Fragment implements OnMapReadyCallback,
             StringBuilder data = new StringBuilder();
             JSONArray jsonArrayResult = response.getJSONArray("results");
             int len = jsonArrayResult.length();
+            Log.d(TAG, "parseJSONResponse: len of res "+len);
             Double lat[] = new Double[len];
             Double lng[] = new Double[len];
             String name[] = new String[len];
+            Log.d(TAG, "parseJSONResponse: results "+jsonArrayResult);
 
             Log.d("menu", "for loop");
             for(int i=0; i<len; i++){
                 JSONObject nearbyObject = jsonArrayResult.getJSONObject(i);
-                JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("mLastLocation");
+                JSONObject nearbyObjectLocation = nearbyObject.getJSONObject("geometry").getJSONObject("location");
                 //Log.d("menu", "objects ok");
                 name[i] = nearbyObject.getString("name");
                 lat[i] = Double.parseDouble(nearbyObjectLocation.getString("lat"));
                 lng[i] = Double.parseDouble(nearbyObjectLocation.getString("lng"));
+
+                Log.d(TAG, "parseJSONResponse: names "+name[i]);
 
             }
             // displaying result in map after reading complete response

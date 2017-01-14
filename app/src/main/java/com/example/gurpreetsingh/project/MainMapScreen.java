@@ -54,6 +54,7 @@ public class MainMapScreen extends AppCompatActivity {
     TextView tvName, tvEmail;
     String email, name, url, choice=null;
     private static MainMapScreen mainMapScreenInstance;
+    private static final String PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
 
     public static AppCompatActivity getActivity(){
           return mainMapScreenInstance;
@@ -349,11 +350,11 @@ public class MainMapScreen extends AppCompatActivity {
             Log.d("menu", "choice again" + choice);
 
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ ","
-                        +lng+ "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ ","
+                        +lng+ "&rankby=distance&types=police&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470" +
-                        "&rankby=distance&types=police&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470" +
+                        "&rankby=distance&types=police&sensor=false&key=" +getString(R.string.google_maps_key);
 
             nearbyHelpFragment.updateUrl(url);
 
@@ -362,23 +363,23 @@ public class MainMapScreen extends AppCompatActivity {
         }
         else if (id == R.id.hospital) {
             Log.d("menu", "hospital");
-            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=""28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=" +getString(R.string.google_maps_key);
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=hospital&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=hospital&sensor=false&key=" +getString(R.string.google_maps_key);
 
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
         }
         else if (id == R.id.doctor) {
             Log.d("menu", "doctor");
-           // url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+           // url = "https://maps.googleapis.com/maps/api/place/search/json?location="28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=" +getString(R.string.google_maps_key);
 
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=doctor&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=doctor&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=doctor&sensor=false&key=" +getString(R.string.google_maps_key);
 
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
@@ -386,11 +387,11 @@ public class MainMapScreen extends AppCompatActivity {
         else if (id == R.id.trainStaion) {
             Log.d("menu", "train station");
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=train_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=train_station&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=" +getString(R.string.google_maps_key);
 
-            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+            //url = "https://maps.googleapis.com/maps/api/place/search/json?location="28.729007,%2077.129470&rankby=distance&types=train_station&sensor=false&key=" +getString(R.string.google_maps_key);
             Log.d("menu", "url's fine");
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
@@ -398,11 +399,11 @@ public class MainMapScreen extends AppCompatActivity {
         else if (id == R.id.subwayStaion) {
             Log.d("menu", "subway station");
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=subway_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=subway_station&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=" +getString(R.string.google_maps_key);
 
-            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+            //url = "https://maps.googleapis.com/maps/api/place/search/json?location="28.729007,%2077.129470&rankby=distance&types=subway_station&sensor=false&key=" +getString(R.string.google_maps_key);
             Log.d("menu", "url's fine");
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
@@ -410,9 +411,9 @@ public class MainMapScreen extends AppCompatActivity {
         else if (id == R.id.busStaion) {
             Log.d("menu", "bus station");
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=bus_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=bus_station&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=bus_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=bus_station&sensor=false&key=" +getString(R.string.google_maps_key);
 
             Log.d("menu", "url's fine");
             nearbyHelpFragment.updateUrl(url);
@@ -421,11 +422,11 @@ public class MainMapScreen extends AppCompatActivity {
         else if (id == R.id.gasStaion) {
             Log.d("menu", "gas station");
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=gas_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=gas_station&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=" +getString(R.string.google_maps_key);
 
-            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+            //url = "https://maps.googleapis.com/maps/api/place/search/json?location="28.729007,%2077.129470&rankby=distance&types=gas_station&sensor=false&key=" +getString(R.string.google_maps_key);
             Log.d("menu", "url's fine");
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
@@ -433,11 +434,11 @@ public class MainMapScreen extends AppCompatActivity {
         else if (id == R.id.taxi_stand) {
             Log.d("menu", "taxi stand");
             if(lat != null && lng != null)
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=" +lat+ "," +lng+ "&rankby=distance&types=taxi_stand&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL +lat+ "," +lng+ "&rankby=distance&types=taxi_stand&sensor=false&key=" +getString(R.string.google_maps_key);
             else
-                url = "https://maps.googleapis.com/maps/api/place/search/json?mLastLocation=28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+                url = PLACES_BASE_URL + "28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=" +getString(R.string.google_maps_key);
 
-            //url = "https://maps.googleapis.com/maps/api/place/search/json?location=28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=AIzaSyD-RMFX5nVH5riaxpHGr4uwNEb2hiernDE";
+            //url = "https://maps.googleapis.com/maps/api/place/search/json?location="28.729007,%2077.129470&rankby=distance&types=taxi_stand&sensor=false&key=" +getString(R.string.google_maps_key);
             Log.d("menu", "url's fine");
             nearbyHelpFragment.updateUrl(url);
             Log.d("menu", "sending request");
