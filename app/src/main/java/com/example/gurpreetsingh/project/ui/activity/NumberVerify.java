@@ -89,8 +89,8 @@ public class NumberVerify extends AppCompatActivity {
         });
 
         //getResources().getColor(R.color.accentColor);
-        //buttonNext.setColorNormal(R.color.red);
-        //buttonNext.setColorPressed(R.color.primaryColor);
+        //buttonAddContacts.setColorNormal(R.color.red);
+        //buttonAddContacts.setColorPressed(R.color.primaryColor);
 
         // setting action to FAB
         myFab.setOnClickListener(new View.OnClickListener() {

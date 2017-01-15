@@ -105,11 +105,11 @@ public class VoiceCommandsFragment extends Fragment {
             case "message":
                 Toast.makeText(getActivity(),"working "+action,Toast.LENGTH_SHORT).show();
                 Log.d("message", "inside switch");
-                for(int i = 0; i< AddContactsActivity.contactCounter; i++)  {
+                /*for(int i = 0; i< AddContactsActivity.contactCounter; i++)  {
                     contactNumber = sharedPreferences.getString("EmergencyContactNumber["+i+"]","121");
                     PerformAction.message(contactNumber, "I am  in trouble. Do contact me fast.");
                     Log.d("message", "message sent");
-                }
+                }*/
                 //PerformAction.message("121", Map.address);
                 break;
 

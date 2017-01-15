@@ -95,7 +95,7 @@ public class UserInformation extends AppCompatActivity {
             }
         });
 
-        //buttonNext.setColorNormal(R.color.accentColor);
+        //buttonAddContacts.setColorNormal(R.color.accentColor);
         // moving to the next screen
         myFab.setOnClickListener(new View.OnClickListener() {
             @Override

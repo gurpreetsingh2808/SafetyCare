@@ -1,4 +1,4 @@
-package com.example.gurpreetsingh.project;
+package com.example.gurpreetsingh.project.domain;
 
 /**
  * Created by Gurpreet on 15-01-2017.

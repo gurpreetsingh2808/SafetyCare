@@ -56,36 +56,6 @@
                 android:src="@drawable/ic_person_add_white_24dp"
                 android:textSize="25sp" />
 
-            <ImageView
-                android:id="@+id/imageViewDeleteContact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="end"
-                android:adjustViewBounds="true"
-                android:paddingBottom="14dp"
-                android:paddingRight="14dp"
-                android:paddingTop="14dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_delete_white_24dp"
-                android:textSize="25sp"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/imageViewReplaceContact"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/imageViewDeleteContact"
-                android:adjustViewBounds="true"
-                android:paddingBottom="14dp"
-                android:paddingRight="14dp"
-                android:paddingTop="14dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_mode_edit_white_24dp"
-                android:textSize="25sp"
-                android:visibility="gone" />
-
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -112,18 +82,17 @@
             android:layout_height="wrap_content"
             />
 
-        <Button
-            android:id="@+id/fab3"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:background="@color/colorAccent"
-            android:textColor="@color/white"
-            android:text="@string/next"
-            fontPath="fonts/Brandon_bold.otf"
-            tools:ignore="MissingPrefix" />
+            android:src="@drawable/ic_person_add_white_24dp"
+            app:fab_showAnimation="@anim/fab_scale_up"
+            />
 
     </RelativeLayout>
 </LinearLayout>
