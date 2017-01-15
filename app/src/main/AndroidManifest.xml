@@ -28,54 +28,43 @@
         android:icon="@drawable/app_logo_two"
         android:label="@string/app_name"
         android:theme="@style/MyAppTheme">
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <!--
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDw2r-_IyayY4iWQVce3O5SdV3EV2CSPjY" />-->
-
-        <!--
+<!--
         for places api
+-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDw2r-_IyayY4iWQVce3O5SdV3EV2CSPjY" />
+            android:value="@string/google_maps_key" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
--->
+
+
         <activity
             android:name=".SplashScreen"
             android:icon="@drawable/app_logo_two"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-
-            <!--  -->
+            </intent-filter>
 
         </activity>
         <activity
             android:name=".ui.activity.NumberVerify"
             android:label="Verification"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.UserInformation"
             android:label="@string/title_activity_user_information"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.ReceiverInfo"
+            android:name=".ui.activity.AddContactsActivity"
             android:label="@string/title_activity_receiver_info"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.AppSettings"
             android:label="@string/title_activity_app_settings"
@@ -90,27 +79,22 @@
             -->
         </activity>
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <activity
             android:name=".MainMapScreen"
             android:label="@string/title_activity_main_map_screen">
-
-
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
 
         </activity>
 
         <service
             android:name=".framework.service.VolumeService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"/>
         <!--
         <receiver
             android:name=".ButtonsReceiver"
@@ -130,10 +114,10 @@
         <service
             android:name=".framework.service.ShakeService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"/>
 
-        <activity android:name=".ui.activity.NearbyPlaces"></activity>
-        <activity android:name=".ui.activity.SignupActivity"></activity>
+        <activity android:name=".ui.activity.NearbyPlaces"/>
+        <activity android:name=".ui.activity.SignupActivity"/>
     </application>
 
 </manifest>

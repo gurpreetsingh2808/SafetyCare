@@ -60,5 +60,7 @@
 
     <string name="next">NEXT</string>
     <string name="titleEmergency">Emergency Contacts</string>
+    <string name="deleted">DELETED</string>
+    <string name="defaultText">default</string>
 
 </resources>
