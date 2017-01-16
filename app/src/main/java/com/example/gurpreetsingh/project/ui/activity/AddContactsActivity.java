@@ -8,13 +8,18 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 
-import com.example.gurpreetsingh.project.Contact;
+import com.example.gurpreetsingh.project.domain.Contact;
+import com.example.gurpreetsingh.project.MainMapScreen;
 import com.example.gurpreetsingh.project.R;
+import com.example.gurpreetsingh.project.framework.data.DataStore;
 import com.example.gurpreetsingh.project.ui.adapter.EmergencyContactsAdapter;
 import com.example.gurpreetsingh.project.util.AppUtils;
+import com.lacronicus.easydatastorelib.DatastoreBuilder;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,13 +28,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -41,39 +45,20 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class AddContactsActivity extends AppCompatActivity implements EmergencyContactsAdapter.ItemListener{
 
     private static final int PERMISSION_CONTACTS_REQUEST_CODE = 1000;
-    Button buttonNext;
-    final int PICK_CONTACT=1;
-    String contactName=null, contactNumber=null, action;
-    ListView lvContacts;
-    ImageView ivAddContact, ivDeleteContact, ivReplaceContact;
-    int selectedIndex=-1;
-    public static int contactCounter=0;
-    ArrayList<String> listName=new ArrayList<String>();
-    ArrayList<String> listNumber=new ArrayList<String>();
-    View selectedView=null;
-    TextView tvInstruction;
-    private RecyclerView rvContacts;
+    private static final int PICK_CONTACT=1;
+
+    private String contactName=null, contactNumber=null, action;
+    private static int contactCounter=0;
+    private ArrayList<String> listName=new ArrayList<String>();
+    private ArrayList<String> listNumber=new ArrayList<String>();
+    private TextView tvInstruction;
     private EmergencyContactsAdapter mAdapter;
+    private DataStore datastore;
 
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(selectedIndex == -1)  {
-            finish();
-        }
-        else {
-            selectedView.setBackgroundColor(getResources().getColor(com.example.gurpreetsingh.project.R.color.white));
-            ivAddContact.setVisibility(View.VISIBLE);
-            ivDeleteContact.setVisibility(View.GONE);
-            ivReplaceContact.setVisibility(View.GONE);
-            buttonNext.setVisibility(View.VISIBLE);
-            selectedIndex=-1;
-        }
     }
 
     @Override
@@ -86,14 +71,17 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
         setSupportActionBar(toolbar3);
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
+        //  initialize data store
+        datastore = new DatastoreBuilder(PreferenceManager.getDefaultSharedPreferences(this))
+                .create(DataStore.class);
+
+        RecyclerView rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvContacts.setLayoutManager(mLayoutManager);
         mAdapter = new EmergencyContactsAdapter(this);
+        rvContacts.setAdapter(mAdapter);
 
 
-
-        Log.d("receiverinfo","on create");
         tvInstruction=(TextView)findViewById(R.id.textViewInstruction);
         Log.d("receiverinfo","find tv instruction");
 
@@ -102,36 +90,7 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
             tvInstruction.setVisibility(View.VISIBLE);
         }
 
-        ivDeleteContact = (ImageView)findViewById(R.id.imageViewDeleteContact);
-        ivDeleteContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listName.remove(selectedIndex);
-                listNumber.remove(selectedIndex);
-                //lvContacts.setAdapter(new MyAdapter(AddContactsActivity.this, R.layout.item_contact, listName));
-                //////////////contactsListAdapter.notifyDataSetChanged();
-                ivAddContact.setVisibility(View.VISIBLE);
-                ivDeleteContact.setVisibility(View.GONE);
-                ivReplaceContact.setVisibility(View.GONE);
-                buttonNext.setVisibility(View.VISIBLE);
-
-                contactCounter--;
-            }
-        });
-
-        ivReplaceContact = (ImageView)findViewById(R.id.imageViewReplaceContact);
-        ivReplaceContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                action = "replace";
-                /////////////////////////contactsListAdapter.notifyDataSetChanged();
-                // add new contact at that position
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
-            }
-        });
-
-        ivAddContact = (ImageView)findViewById(R.id.imageViewAddContact);
+        ImageView ivAddContact = (ImageView) findViewById(R.id.imageViewAddContact);
         ivAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,15 +99,15 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
             }
         });
 
-        buttonNext = (Button) findViewById(R.id.fab3);
-        buttonNext.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton buttonAddContacts = (FloatingActionButton) findViewById(R.id.fabAddContacts);
+        buttonAddContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(contactCounter==0)  {
+                if(datastore.emergencyContactList().get() != null && datastore.emergencyContactList().get().isEmpty())  {
                     Toast.makeText(AddContactsActivity.this, "Please add at least one contact", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent i = new Intent(AddContactsActivity.this, AppSettings.class);
+                    Intent i = new Intent(AddContactsActivity.this, MainMapScreen.class);
                     startActivity(i);
                     finish();
                 }
@@ -258,7 +217,7 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
                         cursor.close();
 
                         if(action.equals("add")) {
-                            if(contactCounter >= 5)  {
+                            if(datastore.emergencyContactList().get() != null && datastore.emergencyContactList().get().size() >= 5)  {
                                 Toast.makeText(AddContactsActivity.this, "Sorry, you can't add more than 5 contacts", Toast.LENGTH_SHORT).show();
                             }
                             else {
@@ -266,9 +225,21 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
                                     Toast.makeText(AddContactsActivity.this, "Contact already added. Please select different contact", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    mAdapter.add(new Contact(contactName, contactNumber));
-                                    if(mAdapter == null) {
-                                        rvContacts.setAdapter(mAdapter);
+                                    List<Contact> listContact = new ArrayList<>();
+                                    //  create new contact object
+                                    Contact contact = new Contact(contactName, contactNumber);
+                                    //  fetch contacts list from data store(shared pref)
+                                    if(datastore.emergencyContactList().get() != null) {
+                                        listContact = datastore.emergencyContactList().get();
+                                    }
+                                    //  add new contact object to the list
+                                    listContact.add(contact);
+                                    //  save the list in shared pref
+                                    datastore.emergencyContactList().put(listContact);
+
+                                    mAdapter.add(contact);
+                                    if(tvInstruction.getVisibility() == View.VISIBLE) {
+                                        tvInstruction.setVisibility(View.GONE);
                                     }
                                     contactCounter++;
                                     saveData(contactCounter);
@@ -281,17 +252,8 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
                             }
                             else {
                                 // remove previous contact
-                                /*listName.remove(selectedIndex);
-                                listNumber.remove(selectedIndex);
-                                // add new contact to that position
-                                listName.add(selectedIndex, contactName);
-                                listNumber.add(selectedIndex, contactNumber);
-                                lvContacts.setAdapter(new MyAdapter(this, R.layout.item_contact, listName));
-
-                                ivAddContact.setVisibility(View.VISIBLE);
-                                ivDeleteContact.setVisibility(View.GONE);
-                                ivReplaceContact.setVisibility(View.GONE);
-                                buttonNext.setVisibility(View.VISIBLE);
+                                /*
+                                buttonAddContacts.setVisibility(View.VISIBLE);
 
                                 saveData(selectedIndex);*/
                             }
@@ -308,7 +270,7 @@ public class AddContactsActivity extends AppCompatActivity implements EmergencyC
         editor.putString("EmergencyContactName["+index+"]", contactName);
         editor.putString("EmergencyContactNumber["+index+"]", contactNumber);
         editor.apply();
-        Toast.makeText(AddContactsActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(AddContactsActivity.this, "Contact saved successfully", Toast.LENGTH_SHORT).show();
     }
 
     @Override

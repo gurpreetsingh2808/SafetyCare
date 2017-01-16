@@ -65,7 +65,7 @@ public class AppSettingsFragment extends Fragment {
                     getActivity().stopService(intentVolumeService);
                     Log.d("AppSettings", " not checked");
                 }
-                editor.commit();
+                editor.apply();
             }
         });
 
@@ -85,7 +85,7 @@ public class AppSettingsFragment extends Fragment {
                     getActivity().stopService(intentShakeService);
                     Log.d("AppSettings", " not checked");
                 }
-                editor.commit();
+                editor.apply();
             }
         });
 

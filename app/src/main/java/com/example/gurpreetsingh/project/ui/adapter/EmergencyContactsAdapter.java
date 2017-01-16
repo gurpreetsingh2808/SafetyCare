@@ -9,9 +9,10 @@ import android.widget.TextView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-import com.example.gurpreetsingh.project.Contact;
+import com.example.gurpreetsingh.project.domain.Contact;
 import com.example.gurpreetsingh.project.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
 public class EmergencyContactsAdapter extends
         RecyclerView.Adapter<EmergencyContactsAdapter.ViewHolder> {
 
-    private List<Contact> mItems;
+    private List<Contact> mItems = new ArrayList<>();
     private Activity activity;
     private ItemListener mListener;
 
@@ -101,14 +102,14 @@ public class EmergencyContactsAdapter extends
             swipeRevealLayout = (SwipeRevealLayout) itemView.findViewById(R.id.swipeLayoutItem);
             tvContactName = (TextView) itemView.findViewById(R.id.tvContactName);
             tvContactNumber = (TextView) itemView.findViewById(R.id.tvContactNumber);
-            tvContactLetter = (TextView) itemView.findViewById(R.id.tvContactLetter);
+            //tvContactLetter = (TextView) itemView.findViewById(R.id.tvContactLetter);
         }
 
         public void setData(Contact contact) {
             this.contact = contact;
             tvContactName.setText(contact.getName());
-            tvContactLetter.setText(contact.getNumber());
-            tvContactLetter.setText(contact.getName().charAt(0));
+            tvContactNumber.setText(contact.getNumber());
+            //tvContactLetter.setText(contact.getName().charAt(0));
         }
 
         @Override

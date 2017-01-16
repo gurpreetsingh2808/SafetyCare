@@ -7,17 +7,21 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.gurpreetsingh.project.framework.PerformAction;
 import com.example.gurpreetsingh.project.framework.ShakeEventListener;
+import com.example.gurpreetsingh.project.framework.data.DataStore;
 import com.example.gurpreetsingh.project.ui.activity.AddContactsActivity;
+import com.lacronicus.easydatastorelib.DatastoreBuilder;
 
 public class ShakeService extends Service {
 
     private SensorManager mSensorManager;
     private ShakeEventListener mSensorListener;
+    private DataStore datastore;
 
     public ShakeService() {
     }
@@ -32,10 +36,13 @@ public class ShakeService extends Service {
         Log.d("test", "oncreate service started");
         final SharedPreferences sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE);
 
+        //  initialize data store
+        datastore = new DatastoreBuilder(PreferenceManager.getDefaultSharedPreferences(this))
+                .create(DataStore.class);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorListener = new ShakeEventListener();
 
-        mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+       /* mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 
             public void onShake() {
                 Toast.makeText(getApplicationContext(), "Shake!", Toast.LENGTH_SHORT).show();
@@ -46,7 +53,7 @@ public class ShakeService extends Service {
                     Log.d("message", "message sent");
                 }
             }
-        });
+        });*/
     }
 
     @Override
